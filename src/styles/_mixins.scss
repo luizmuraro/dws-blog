@@ -16,6 +16,14 @@ $breakpoints: (
   }
 }
 
+@mixin line-clamp($lines) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  line-clamp: $lines;
+  overflow: hidden;
+}
+
 @mixin container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

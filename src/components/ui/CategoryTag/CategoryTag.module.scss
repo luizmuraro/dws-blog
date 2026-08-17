@@ -1,0 +1,16 @@
+@use '../../../styles/typography' as type;
+
+.tag {
+  @include type.caption;
+
+  display: inline-flex;
+  gap: var(--space-8);
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8) var(--space-12);
+  color: var(--color-neutral-extra-dark);
+  white-space: nowrap;
+  background-color: var(--color-neutral-extra-light);
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+}

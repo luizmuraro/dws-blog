@@ -1,0 +1,9 @@
+@use '../../../styles/typography' as type;
+
+.message {
+  @include type.body-large;
+
+  padding-block: var(--space-32);
+  color: var(--color-neutral-extra-dark);
+  text-align: center;
+}
