@@ -1,0 +1,36 @@
+@use 'sass:map';
+
+$breakpoints: (
+  tablet: 768px,
+  desktop: 1024px,
+);
+
+/// Mobile-first media query for a named breakpoint.
+@mixin from($size) {
+  @if not map.has-key($breakpoints, $size) {
+    @error "Unknown breakpoint `#{$size}`. Available: #{map.keys($breakpoints)}.";
+  }
+
+  @media (min-width: map.get($breakpoints, $size)) {
+    @content;
+  }
+}
+
+@mixin container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-16);
+  margin-inline: var(--space-16);
+
+  @include from(tablet) {
+    grid-template-columns: repeat(8, 1fr);
+    gap: var(--space-24);
+    margin-inline: var(--space-32);
+  }
+
+  @include from(desktop) {
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-32);
+    margin-inline: var(--space-64);
+  }
+}

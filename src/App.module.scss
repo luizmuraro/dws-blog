@@ -1,0 +1,56 @@
+@use './styles/mixins' as m;
+@use './styles/typography' as type;
+
+.page {
+  @include m.container;
+
+  padding-block: var(--space-48);
+  row-gap: var(--space-48);
+}
+
+.section {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.title {
+  @include type.h1;
+
+  color: var(--color-primary-medium);
+}
+
+.subtitle {
+  @include type.h2;
+
+  color: var(--color-secondary-medium);
+}
+
+.sectionTitle {
+  @include type.h3;
+
+  color: var(--color-neutral-extra-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bodyLarge {
+  @include type.body-large;
+}
+
+.bodyLargeSemibold {
+  @include type.body-large-semibold;
+}
+
+.bodySmall {
+  @include type.body-small;
+
+  color: var(--color-neutral-extra-dark);
+}
+
+.caption {
+  @include type.caption;
+
+  color: var(--color-neutral-dark);
+}
