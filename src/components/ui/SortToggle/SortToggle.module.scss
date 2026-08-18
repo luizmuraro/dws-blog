@@ -1,3 +1,4 @@
+@use '../../../styles/mixins' as m;
 @use '../../../styles/typography' as type;
 
 .toggle {
@@ -37,4 +38,30 @@
 
 .toggle:hover .icon {
   color: inherit;
+}
+
+.skeleton {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: var(--space-8);
+  align-items: center;
+  margin-inline-start: auto;
+  padding: var(--space-8);
+}
+
+.skeletonLabel,
+.skeletonIcon {
+  @include m.skeleton;
+}
+
+.skeletonLabel {
+  width: 5.25rem;
+  height: 1.3125rem;
+  border-radius: var(--radius-pill);
+}
+
+.skeletonIcon {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
 }

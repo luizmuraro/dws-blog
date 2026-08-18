@@ -42,3 +42,26 @@ $breakpoints: (
     margin-inline: var(--space-64);
   }
 }
+
+@mixin skeleton {
+  @at-root {
+    @keyframes skeleton-pulse {
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.45;
+      }
+    }
+  }
+
+  display: block;
+  background-color: var(--color-neutral-extra-light);
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}

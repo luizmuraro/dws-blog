@@ -1,16 +1,5 @@
 @use '../../../styles/mixins' as m;
 
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.45;
-  }
-}
-
 .bar {
   display: flex;
   flex: 1;
@@ -26,11 +15,10 @@
 }
 
 .skeletonButton {
-  display: block;
+  @include m.skeleton;
+
   height: 32px;
-  background-color: var(--color-neutral-extra-light);
   border-radius: var(--radius-pill);
-  animation: pulse 1.6s ease-in-out infinite;
 }
 
 .skeletonButton:first-child {
@@ -39,10 +27,4 @@
 
 .skeletonButton:last-child {
   width: 5.75rem;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .skeletonButton {
-    animation: none;
-  }
 }

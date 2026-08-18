@@ -1,5 +1,12 @@
 import { FilterBar, FilterBarSkeleton } from '@/components/features';
-import { EmptyState, ErrorState, PostCard, PostCardSkeleton, SortToggle } from '@/components/ui';
+import {
+  EmptyState,
+  ErrorState,
+  PostCard,
+  PostCardSkeleton,
+  SortToggle,
+  SortToggleSkeleton,
+} from '@/components/ui';
 import { usePostFilters, usePosts } from '@/hooks';
 import styles from './PostsListPage.module.scss';
 
@@ -75,7 +82,11 @@ const PostsListPage = () => {
       <h1 className={styles.heading}>DWS blog</h1>
       <div className={styles.toolbar}>
         {renderFilters()}
-        <SortToggle order={sortOrder} onToggle={toggleSortOrder} />
+        {isLoading ? (
+          <SortToggleSkeleton />
+        ) : (
+          <SortToggle order={sortOrder} onToggle={toggleSortOrder} />
+        )}
       </div>
       {renderContent()}
     </section>

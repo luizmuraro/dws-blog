@@ -1,13 +1,4 @@
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.45;
-  }
-}
+@use '../../../styles/mixins' as m;
 
 .card {
   display: flex;
@@ -20,9 +11,7 @@
 .thumbnail,
 .line,
 .tag {
-  display: block;
-  background-color: var(--color-neutral-extra-light);
-  animation: pulse 1.6s ease-in-out infinite;
+  @include m.skeleton;
 }
 
 .thumbnail {
@@ -99,12 +88,4 @@
   width: 5rem;
   height: calc(var(--space-8) * 2 + 0.975rem);
   border-radius: var(--radius-pill);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .thumbnail,
-  .line,
-  .tag {
-    animation: none;
-  }
 }
