@@ -1,5 +1,6 @@
 import type { Post } from '@/types/domain';
-import type { FilterOption } from '@/types/ui';
+import type { FilterOption, SortOrder } from '@/types/ui';
+import { getLastName } from '@/utils/text';
 
 export interface PostFilters {
   categoryNames: string[];
@@ -13,7 +14,7 @@ export const getCategoryOptions = (posts: Post[]): FilterOption[] => {
 };
 
 export const getAuthorOptions = (posts: Post[]): FilterOption[] => {
-  const namesById = new Map(posts.map((post) => [post.author.id, post.author.name]));
+  const namesById = new Map(posts.map((post) => [post.author.id, getLastName(post.author.name)]));
 
   return [...namesById]
     .map(([id, name]) => ({ id, name }))
@@ -28,4 +29,11 @@ export const filterPosts = (posts: Post[], { categoryNames, authorIds }: PostFil
     const matchesAuthor = authorIds.length === 0 || authorIds.includes(post.author.id);
 
     return matchesCategory && matchesAuthor;
+  });
+
+export const sortPosts = (posts: Post[], order: SortOrder): Post[] =>
+  [...posts].sort((a, b) => {
+    const newestFirst = new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+
+    return order === 'newest' ? newestFirst : -newestFirst;
   });

@@ -13,9 +13,11 @@
 
 .bar {
   display: flex;
+  flex: 1;
   flex-wrap: wrap;
   gap: var(--space-8);
   align-items: center;
+  min-width: 0;
 
   /* Desktop moves the filters into a sidebar, so the inline bar is mobile/tablet only. */
   @include m.from(desktop) {

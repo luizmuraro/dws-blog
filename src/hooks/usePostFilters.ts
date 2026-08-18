@@ -1,7 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { Post } from '@/types/domain';
-import type { FilterOption } from '@/types/ui';
-import { filterPosts, getAuthorOptions, getCategoryOptions } from '@/utils/postFilters';
+import type { FilterOption, SortOrder } from '@/types/ui';
+import { filterPosts, getAuthorOptions, getCategoryOptions, sortPosts } from '@/utils/postFilters';
 
 export interface UsePostFiltersResult {
   categoryOptions: FilterOption[];
@@ -11,25 +11,33 @@ export interface UsePostFiltersResult {
   setSelectedCategoryIds: (selectedIds: string[]) => void;
   setSelectedAuthorIds: (selectedIds: string[]) => void;
   hasOptions: boolean;
-  filteredPosts: Post[];
+  sortOrder: SortOrder;
+  toggleSortOrder: () => void;
+  visiblePosts: Post[];
 }
 
 export const usePostFilters = (posts: Post[] | null): UsePostFiltersResult => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [selectedAuthorIds, setSelectedAuthorIds] = useState<string[]>([]);
+  const [sortOrder, setSortOrder] = useState<SortOrder>('newest');
 
   const loadedPosts = useMemo(() => posts ?? [], [posts]);
   const categoryOptions = useMemo(() => getCategoryOptions(loadedPosts), [loadedPosts]);
   const authorOptions = useMemo(() => getAuthorOptions(loadedPosts), [loadedPosts]);
 
-  const filteredPosts = useMemo(
-    () =>
-      filterPosts(loadedPosts, {
-        categoryNames: selectedCategoryIds,
-        authorIds: selectedAuthorIds,
-      }),
-    [loadedPosts, selectedCategoryIds, selectedAuthorIds],
+  const toggleSortOrder = useCallback(
+    () => setSortOrder((order) => (order === 'newest' ? 'oldest' : 'newest')),
+    [],
   );
+
+  const visiblePosts = useMemo(() => {
+    const matching = filterPosts(loadedPosts, {
+      categoryNames: selectedCategoryIds,
+      authorIds: selectedAuthorIds,
+    });
+
+    return sortPosts(matching, sortOrder);
+  }, [loadedPosts, selectedCategoryIds, selectedAuthorIds, sortOrder]);
 
   return {
     categoryOptions,
@@ -39,6 +47,8 @@ export const usePostFilters = (posts: Post[] | null): UsePostFiltersResult => {
     setSelectedCategoryIds,
     setSelectedAuthorIds,
     hasOptions: categoryOptions.length > 0 || authorOptions.length > 0,
-    filteredPosts,
+    sortOrder,
+    toggleSortOrder,
+    visiblePosts,
   };
 };

@@ -1,5 +1,5 @@
 import { FilterBar, FilterBarSkeleton } from '@/components/features';
-import { EmptyState, ErrorState, PostCard, PostCardSkeleton } from '@/components/ui';
+import { EmptyState, ErrorState, PostCard, PostCardSkeleton, SortToggle } from '@/components/ui';
 import { usePostFilters, usePosts } from '@/hooks';
 import styles from './PostsListPage.module.scss';
 
@@ -15,7 +15,9 @@ const PostsListPage = () => {
     setSelectedCategoryIds,
     setSelectedAuthorIds,
     hasOptions,
-    filteredPosts,
+    sortOrder,
+    toggleSortOrder,
+    visiblePosts,
   } = usePostFilters(posts);
 
   const renderFilters = () => {
@@ -53,13 +55,13 @@ const PostsListPage = () => {
       return <ErrorState message="We could not load the posts." onRetry={retry} />;
     }
 
-    if (filteredPosts.length === 0) {
+    if (visiblePosts.length === 0) {
       return <EmptyState message="No posts found" />;
     }
 
     return (
       <ul className={styles.grid}>
-        {filteredPosts.map((post) => (
+        {visiblePosts.map((post) => (
           <li key={post.id}>
             <PostCard post={post} />
           </li>
@@ -71,7 +73,10 @@ const PostsListPage = () => {
   return (
     <section className={styles.page}>
       <h1 className={styles.heading}>DWS blog</h1>
-      {renderFilters()}
+      <div className={styles.toolbar}>
+        {renderFilters()}
+        <SortToggle order={sortOrder} onToggle={toggleSortOrder} />
+      </div>
       {renderContent()}
     </section>
   );

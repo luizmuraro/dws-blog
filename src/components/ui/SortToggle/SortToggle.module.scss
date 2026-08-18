@@ -1,0 +1,40 @@
+@use '../../../styles/typography' as type;
+
+.toggle {
+  @include type.body-small;
+
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: var(--space-8);
+  align-items: center;
+  margin-inline-start: auto;
+  padding: var(--space-8);
+  color: var(--color-neutral-extra-dark);
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  border-radius: var(--radius-xl);
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--color-accent1-medium);
+}
+
+.toggle:hover {
+  color: var(--color-neutral-lightest);
+  background-color: var(--color-accent1-medium);
+}
+
+.toggle:hover .icon {
+  color: inherit;
+}

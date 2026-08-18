@@ -26,6 +26,11 @@
   color: var(--color-primary-dark);
 }
 
+.toolbar {
+  display: flex;
+  align-items: center;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr;

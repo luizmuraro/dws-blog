@@ -4,3 +4,4 @@ export { default as ErrorState } from './ErrorState/ErrorState';
 export { default as FilterDropdown } from './FilterDropdown/FilterDropdown';
 export { default as PostCard } from './PostCard/PostCard';
 export { default as PostCardSkeleton } from './PostCardSkeleton/PostCardSkeleton';
+export { default as SortToggle } from './SortToggle/SortToggle';
