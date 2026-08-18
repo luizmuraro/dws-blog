@@ -1,0 +1,101 @@
+@use '../../../styles/typography' as type;
+
+.dropdown {
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+}
+
+.control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: 100%;
+  height: 32px;
+  padding-inline: var(--space-16) var(--space-12);
+  background-color: var(--color-neutral-white);
+  border: 1px solid var(--color-secondary-medium);
+  border-radius: var(--radius-pill);
+  transition: background-color 0.2s ease;
+}
+
+.control:has(button:active),
+.controlOpen {
+  background-color: var(--color-secondary-lightest);
+}
+
+.trigger,
+.clearButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  color: var(--color-secondary-medium);
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+}
+
+.label {
+  @include type.caption;
+
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The mockup sizes the icon slot at 24px, larger than the glyph itself. */
+.icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + var(--space-8));
+  left: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  width: max-content;
+  min-width: 100%;
+  max-width: min(280px, calc(100vw - var(--space-32)));
+  padding: var(--space-16);
+  list-style: none;
+  background-color: var(--color-neutral-lightest);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgb(2 3 24 / 12%);
+}
+
+.option {
+  @include type.body-small;
+
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  color: var(--color-neutral-darkest);
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  transition: color 0.2s ease;
+}
+
+.option:hover {
+  color: var(--color-secondary-medium);
+}
+
+.optionSelected {
+  color: var(--color-secondary-medium);
+}

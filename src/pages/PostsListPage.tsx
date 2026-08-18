@@ -1,55 +1,69 @@
-import type { ReactNode } from 'react';
-import { EmptyState, PostCard, PostCardSkeleton } from '@/components/ui';
-import { usePosts } from '@/hooks';
+import { FilterBar } from '@/components/features';
+import { EmptyState, ErrorState, PostCard, PostCardSkeleton } from '@/components/ui';
+import { usePostFilters, usePosts } from '@/hooks';
 import styles from './PostsListPage.module.scss';
 
 const SKELETON_COUNT = 6;
 
-function PostsListPage() {
+const PostsListPage = () => {
   const { data: posts, isLoading, error, retry } = usePosts();
+  const {
+    categoryOptions,
+    authorOptions,
+    selectedCategoryIds,
+    selectedAuthorIds,
+    setSelectedCategoryIds,
+    setSelectedAuthorIds,
+    filteredPosts,
+  } = usePostFilters(posts);
 
-  let content: ReactNode;
-
-  if (isLoading) {
-    content = (
-      <div aria-busy="true">
-        <p className="visually-hidden">Loading posts…</p>
-        <div className={styles.grid}>
-          {Array.from({ length: SKELETON_COUNT }, (_, index) => (
-            <PostCardSkeleton key={index} />
-          ))}
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div aria-busy="true">
+          <p className="visually-hidden">Loading posts…</p>
+          <div className={styles.grid}>
+            {Array.from({ length: SKELETON_COUNT }, (_, index) => (
+              <PostCardSkeleton key={index} />
+            ))}
+          </div>
         </div>
-      </div>
-    );
-  } else if (error) {
-    content = (
-      <div className={styles.error} role="alert">
-        <p>We could not load the posts.</p>
-        <button className={styles.retryButton} type="button" onClick={retry}>
-          Try again
-        </button>
-      </div>
-    );
-  } else if (!posts || posts.length === 0) {
-    content = <EmptyState message="No posts found" />;
-  } else {
-    content = (
+      );
+    }
+
+    if (error) {
+      return <ErrorState message="We could not load the posts." onRetry={retry} />;
+    }
+
+    if (filteredPosts.length === 0) {
+      return <EmptyState message="No posts found" />;
+    }
+
+    return (
       <ul className={styles.grid}>
-        {posts.map((post) => (
+        {filteredPosts.map((post) => (
           <li key={post.id}>
             <PostCard post={post} />
           </li>
         ))}
       </ul>
     );
-  }
+  };
 
   return (
     <section className={styles.page}>
       <h1 className={styles.heading}>DWS blog</h1>
-      {content}
+      <FilterBar
+        categories={categoryOptions}
+        authors={authorOptions}
+        selectedCategoryIds={selectedCategoryIds}
+        selectedAuthorIds={selectedAuthorIds}
+        onCategoryChange={setSelectedCategoryIds}
+        onAuthorChange={setSelectedAuthorIds}
+      />
+      {renderContent()}
     </section>
   );
-}
+};
 
 export default PostsListPage;
