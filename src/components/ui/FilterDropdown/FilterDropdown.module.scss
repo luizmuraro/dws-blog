@@ -21,9 +21,10 @@
   transition: background-color 0.2s ease;
 }
 
-.control:has(button:active),
-.controlOpen {
-  background-color: var(--color-secondary-lightest);
+.control:hover,
+.controlOpen,
+.controlSelected {
+  background-color: color-mix(in srgb, var(--color-secondary-medium) 5%, transparent);
 }
 
 .trigger,
@@ -77,8 +78,8 @@
   padding: var(--space-16);
   list-style: none;
   background-color: var(--color-neutral-lightest);
-  border-radius: var(--radius-md);
-  box-shadow: 0 4px 16px rgb(2 3 24 / 12%);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 29.6px rgb(91 123 193 / 24%);
 }
 
 .option {

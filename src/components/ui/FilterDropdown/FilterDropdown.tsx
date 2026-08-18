@@ -28,7 +28,9 @@ const FilterDropdown = ({ label, options, selectedIds, onChange }: FilterDropdow
 
   return (
     <div className={styles.dropdown} ref={containerRef}>
-      <div className={`${styles.control} ${isOpen ? styles.controlOpen : ''}`}>
+      <div
+        className={`${styles.control} ${isOpen ? styles.controlOpen : ''} ${hasSelection ? styles.controlSelected : ''}`}
+      >
         <button
           className={styles.trigger}
           ref={triggerRef}

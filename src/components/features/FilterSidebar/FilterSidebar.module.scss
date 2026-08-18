@@ -70,18 +70,23 @@
   white-space: nowrap;
   cursor: pointer;
   background-color: transparent;
-  border: 0;
-  border-bottom: 1px solid var(--color-neutral-extra-light);
-  transition: color 0.2s ease;
+  border: 1px solid transparent;
+  border-bottom-color: var(--color-neutral-extra-light);
+  border-radius: var(--radius-md);
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .option:hover {
-  color: var(--color-secondary-medium);
+  color: var(--color-accent1-dark);
 }
 
 .optionSelected {
-  font-weight: 600;
-  color: var(--color-secondary-medium);
+  color: var(--color-accent1-dark);
+  background-color: color-mix(in srgb, var(--color-accent1-light) 5%, transparent);
+  border-color: var(--color-accent1-dark);
 }
 
 .apply {
