@@ -1,10 +1,9 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import AppHeader from './AppHeader/AppHeader';
 
 const RootLayout = () => (
   <>
-    <header>
-      <Link to="/">DWS Blog</Link>
-    </header>
+    <AppHeader />
     <main>
       <Outlet />
     </main>

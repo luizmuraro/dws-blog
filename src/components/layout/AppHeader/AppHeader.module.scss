@@ -1,0 +1,143 @@
+@use '../../../styles/mixins' as m;
+@use '../../../styles/typography' as type;
+
+.header {
+  padding: var(--space-16);
+  background-color: var(--color-neutral-white);
+  border-bottom: 1px solid var(--color-neutral-extra-light);
+}
+
+.row {
+  display: flex;
+  gap: var(--space-16);
+  align-items: center;
+  min-height: 40px;
+
+  @include m.from(desktop) {
+    min-height: 56px;
+  }
+}
+
+.rowSearching {
+  display: none;
+
+  @include m.from(desktop) {
+    display: flex;
+  }
+}
+
+.logo {
+  display: inline-flex;
+  flex-shrink: 1;
+  min-width: 0;
+  margin-inline-end: auto;
+  color: var(--color-neutral-darkest);
+}
+
+.logo svg {
+  height: auto;
+}
+
+.searchTrigger,
+.searchSubmit {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-neutral-lightest);
+  cursor: pointer;
+  background-color: var(--color-primary-dark);
+  border: 0;
+  border-radius: 50%;
+}
+
+.searchTrigger {
+  width: 32px;
+  height: 32px;
+
+  @include m.from(desktop) {
+    display: none;
+  }
+}
+
+.searchSubmit {
+  width: 40px;
+  height: 40px;
+}
+
+.mobileSearch,
+.desktopSearch {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-neutral-lightest);
+  border-radius: var(--radius-pill);
+}
+
+.mobileSearch:focus-within,
+.desktopSearch:focus-within {
+  outline: 2px solid var(--color-accent1-medium);
+  outline-offset: 2px;
+}
+
+.mobileSearch {
+  gap: var(--space-8);
+  min-height: 40px;
+  padding-inline: var(--space-12);
+
+  @include m.from(desktop) {
+    display: none;
+  }
+}
+
+.desktopSearch {
+  display: none;
+
+  @include m.from(desktop) {
+    display: flex;
+    flex-shrink: 0;
+    width: 536px;
+    max-width: 100%;
+    height: 56px;
+    padding: var(--space-8);
+  }
+}
+
+.input {
+  @include type.body-small;
+
+  flex: 1;
+  min-width: 0;
+  padding-inline: var(--space-8);
+  color: var(--color-primary-dark);
+  background-color: transparent;
+  border: 0;
+
+  @include m.from(desktop) {
+    padding-inline-start: var(--space-16);
+  }
+}
+
+.input:focus {
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--color-neutral-dark);
+}
+
+.input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.iconButton {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--color-neutral-extra-dark);
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+}
