@@ -1,5 +1,6 @@
+import { SortOrder } from '@/constants/sortOrder';
 import type { Post } from '@/types/domain';
-import type { FilterOption, SortOrder } from '@/types/ui';
+import type { FilterOption } from '@/types/ui';
 import { getLastName } from '@/utils/text';
 
 export interface PostFilters {
@@ -35,5 +36,5 @@ export const sortPosts = (posts: Post[], order: SortOrder): Post[] =>
   [...posts].sort((a, b) => {
     const newestFirst = new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
 
-    return order === 'newest' ? newestFirst : -newestFirst;
+    return order === SortOrder.Newest ? newestFirst : -newestFirst;
   });

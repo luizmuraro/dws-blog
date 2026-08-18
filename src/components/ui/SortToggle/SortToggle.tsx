@@ -1,5 +1,5 @@
 import { SortIcon } from '@/components/icons';
-import type { SortOrder } from '@/types/ui';
+import { SortOrder } from '@/constants/sortOrder';
 import styles from './SortToggle.module.scss';
 
 interface SortToggleProps {
@@ -8,8 +8,8 @@ interface SortToggleProps {
 }
 
 const ORDER_LABELS: Record<SortOrder, string> = {
-  newest: 'Newest first',
-  oldest: 'Oldest first',
+  [SortOrder.Newest]: 'Newest first',
+  [SortOrder.Oldest]: 'Oldest first',
 };
 
 const SortToggle = ({ order, onToggle }: SortToggleProps) => (

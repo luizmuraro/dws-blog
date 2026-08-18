@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
+import { SortOrder } from '@/constants/sortOrder';
 import type { Post } from '@/types/domain';
-import type { FilterOption, SortOrder } from '@/types/ui';
+import type { FilterOption } from '@/types/ui';
 import { filterPosts, getAuthorOptions, getCategoryOptions, sortPosts } from '@/utils/postFilters';
 
 export interface UsePostFiltersResult {
@@ -19,14 +20,15 @@ export interface UsePostFiltersResult {
 export const usePostFilters = (posts: Post[] | null): UsePostFiltersResult => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [selectedAuthorIds, setSelectedAuthorIds] = useState<string[]>([]);
-  const [sortOrder, setSortOrder] = useState<SortOrder>('newest');
+  const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Newest);
 
   const loadedPosts = useMemo(() => posts ?? [], [posts]);
   const categoryOptions = useMemo(() => getCategoryOptions(loadedPosts), [loadedPosts]);
   const authorOptions = useMemo(() => getAuthorOptions(loadedPosts), [loadedPosts]);
 
   const toggleSortOrder = useCallback(
-    () => setSortOrder((order) => (order === 'newest' ? 'oldest' : 'newest')),
+    () =>
+      setSortOrder((order) => (order === SortOrder.Newest ? SortOrder.Oldest : SortOrder.Newest)),
     [],
   );
 

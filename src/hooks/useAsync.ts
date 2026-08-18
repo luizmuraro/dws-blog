@@ -14,17 +14,25 @@ interface State<T> {
   error: Error | null;
 }
 
+const AsyncActionType = {
+  Pending: 'PENDING',
+  Resolved: 'RESOLVED',
+  Rejected: 'REJECTED',
+} as const;
+
 type Action<T> =
-  { type: 'PENDING' } | { type: 'RESOLVED'; payload: T } | { type: 'REJECTED'; payload: Error };
+  | { type: typeof AsyncActionType.Pending }
+  | { type: typeof AsyncActionType.Resolved; payload: T }
+  | { type: typeof AsyncActionType.Rejected; payload: Error };
 
 // Every action returns a full state, so the previous one is never needed.
 const reducer = <T>(_state: State<T>, action: Action<T>): State<T> => {
   switch (action.type) {
-    case 'PENDING':
+    case AsyncActionType.Pending:
       return { data: null, isLoading: true, error: null };
-    case 'RESOLVED':
+    case AsyncActionType.Resolved:
       return { data: action.payload, isLoading: false, error: null };
-    case 'REJECTED':
+    case AsyncActionType.Rejected:
       return { data: null, isLoading: false, error: action.payload };
   }
 };
@@ -52,17 +60,17 @@ export const useAsync = <T>(
 
   useEffect(() => {
     const controller = new AbortController();
-    dispatch({ type: 'PENDING' });
+    dispatch({ type: AsyncActionType.Pending });
 
     fn(controller.signal)
       .then((data) => {
         // An aborted call is a cancellation, not a failure: drop the result.
         if (controller.signal.aborted) return;
-        dispatch({ type: 'RESOLVED', payload: data });
+        dispatch({ type: AsyncActionType.Resolved, payload: data });
       })
       .catch((error: unknown) => {
         if (controller.signal.aborted) return;
-        dispatch({ type: 'REJECTED', payload: toError(error) });
+        dispatch({ type: AsyncActionType.Rejected, payload: toError(error) });
       });
 
     return () => {
