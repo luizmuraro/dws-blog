@@ -13,12 +13,15 @@ const ORDER_LABELS: Record<SortOrder, string> = {
 };
 
 const SortToggle = ({ order, onToggle }: SortToggleProps) => (
-  <button className={styles.toggle} type="button" onClick={onToggle}>
-    {ORDER_LABELS[order]}
-    <span className={styles.icon}>
-      <SortIcon />
-    </span>
-  </button>
+  <div className={styles.sort}>
+    <span className={styles.prefix}>Sort by:</span>
+    <button className={styles.toggle} type="button" onClick={onToggle}>
+      {ORDER_LABELS[order]}
+      <span className={styles.icon}>
+        <SortIcon />
+      </span>
+    </button>
+  </div>
 );
 
 export default SortToggle;

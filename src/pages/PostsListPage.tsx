@@ -1,4 +1,9 @@
-import { FilterBar, FilterBarSkeleton } from '@/components/features';
+import {
+  FilterBar,
+  FilterBarSkeleton,
+  FilterSidebar,
+  FilterSidebarSkeleton,
+} from '@/components/features';
 import {
   EmptyState,
   ErrorState,
@@ -44,6 +49,23 @@ const PostsListPage = () => {
     );
   };
 
+  const renderSidebar = () => {
+    if (isLoading) return <FilterSidebarSkeleton />;
+
+    if (!hasOptions) return null;
+
+    return (
+      <FilterSidebar
+        categories={categoryOptions}
+        authors={authorOptions}
+        selectedCategoryIds={selectedCategoryIds}
+        selectedAuthorIds={selectedAuthorIds}
+        onCategoryChange={setSelectedCategoryIds}
+        onAuthorChange={setSelectedAuthorIds}
+      />
+    );
+  };
+
   const renderContent = () => {
     if (isLoading) {
       return (
@@ -79,8 +101,8 @@ const PostsListPage = () => {
 
   return (
     <section className={styles.page}>
-      <h1 className={styles.heading}>DWS blog</h1>
       <div className={styles.toolbar}>
+        <h1 className={styles.heading}>DWS blog</h1>
         {renderFilters()}
         {isLoading ? (
           <SortToggleSkeleton />
@@ -88,7 +110,10 @@ const PostsListPage = () => {
           <SortToggle order={sortOrder} onToggle={toggleSortOrder} />
         )}
       </div>
-      {renderContent()}
+      <div className={styles.layout}>
+        {renderSidebar()}
+        <div className={styles.content}>{renderContent()}</div>
+      </div>
     </section>
   );
 };

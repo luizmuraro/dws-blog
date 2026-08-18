@@ -1,6 +1,28 @@
 @use '../../../styles/mixins' as m;
 @use '../../../styles/typography' as type;
 
+.sort {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: var(--space-4);
+  align-items: center;
+  margin-inline-start: auto;
+}
+
+/* The label is desktop only, where the row has space for it next to the heading. */
+.prefix {
+  display: none;
+
+  @include m.from(desktop) {
+    @include type.body-large;
+
+    display: inline;
+    font-weight: 700;
+    color: var(--color-neutral-extra-dark);
+    white-space: nowrap;
+  }
+}
+
 .toggle {
   @include type.body-small;
 
@@ -8,7 +30,6 @@
   flex-shrink: 0;
   gap: var(--space-8);
   align-items: center;
-  margin-inline-start: auto;
   padding: var(--space-8);
   color: var(--color-neutral-extra-dark);
   white-space: nowrap;
@@ -47,6 +68,19 @@
   align-items: center;
   margin-inline-start: auto;
   padding: var(--space-8);
+}
+
+.skeletonPrefix {
+  display: none;
+
+  @include m.from(desktop) {
+    @include m.skeleton;
+
+    display: block;
+    width: 3.5rem;
+    height: 1.5rem;
+    border-radius: var(--radius-sm);
+  }
 }
 
 .skeletonLabel,
