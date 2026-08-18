@@ -15,12 +15,10 @@ interface State<T> {
 }
 
 type Action<T> =
-  | { type: 'PENDING' }
-  | { type: 'RESOLVED'; payload: T }
-  | { type: 'REJECTED'; payload: Error };
+  { type: 'PENDING' } | { type: 'RESOLVED'; payload: T } | { type: 'REJECTED'; payload: Error };
 
 // Every action returns a full state, so the previous one is never needed.
-function reducer<T>(_state: State<T>, action: Action<T>): State<T> {
+const reducer = <T>(_state: State<T>, action: Action<T>): State<T> => {
   switch (action.type) {
     case 'PENDING':
       return { data: null, isLoading: true, error: null };
@@ -29,11 +27,10 @@ function reducer<T>(_state: State<T>, action: Action<T>): State<T> {
     case 'REJECTED':
       return { data: null, isLoading: false, error: action.payload };
   }
-}
+};
 
-function toError(value: unknown): Error {
-  return value instanceof Error ? value : new Error(String(value));
-}
+const toError = (value: unknown): Error =>
+  value instanceof Error ? value : new Error(String(value));
 
 /**
  * Runs an async call tied to the component lifecycle.
@@ -41,10 +38,10 @@ function toError(value: unknown): Error {
  * `fn` must be memoized by the caller (useCallback): it is part of the effect
  * deps, so a function recreated on every render would loop forever.
  */
-export function useAsync<T>(
+export const useAsync = <T>(
   fn: (signal: AbortSignal) => Promise<T>,
   deps: DependencyList,
-): UseAsyncResult<T> {
+): UseAsyncResult<T> => {
   const initialState: State<T> = { data: null, isLoading: true, error: null };
   const [state, dispatch] = useReducer(reducer, initialState);
   const [retryCount, setRetryCount] = useState(0);
@@ -75,4 +72,4 @@ export function useAsync<T>(
   }, [fn, retryCount, ...deps]);
 
   return { ...state, retry };
-}
+};

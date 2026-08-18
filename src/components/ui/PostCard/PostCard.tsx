@@ -9,7 +9,7 @@ interface PostCardProps {
   post: Post;
 }
 
-function PostCard({ post }: PostCardProps) {
+const PostCard = ({ post }: PostCardProps) => {
   const [leadParagraph] = post.paragraphs;
 
   return (
@@ -41,6 +41,6 @@ function PostCard({ post }: PostCardProps) {
       </div>
     </article>
   );
-}
+};
 
 export default PostCard;

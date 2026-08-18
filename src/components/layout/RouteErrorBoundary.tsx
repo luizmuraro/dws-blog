@@ -1,6 +1,6 @@
 import { Link, isRouteErrorResponse, useRouteError } from 'react-router-dom';
 
-function getErrorMessage(error: unknown): string {
+const getErrorMessage = (error: unknown): string => {
   if (isRouteErrorResponse(error)) {
     return `${error.status} ${error.statusText}`;
   }
@@ -10,9 +10,9 @@ function getErrorMessage(error: unknown): string {
   }
 
   return 'An unexpected error occurred.';
-}
+};
 
-function RouteErrorBoundary() {
+const RouteErrorBoundary = () => {
   const error = useRouteError();
 
   return (
@@ -22,6 +22,6 @@ function RouteErrorBoundary() {
       <Link to="/">Back to home</Link>
     </main>
   );
-}
+};
 
 export default RouteErrorBoundary;

@@ -12,7 +12,7 @@ export class ApiError extends Error {
   }
 }
 
-export async function request<T>(path: string, init?: RequestInit): Promise<T> {
+export const request = async <T>(path: string, init?: RequestInit): Promise<T> => {
   const url = `${BASE_URL}${path}`;
   const response = await fetch(url, init);
 
@@ -21,4 +21,4 @@ export async function request<T>(path: string, init?: RequestInit): Promise<T> {
   }
 
   return (await response.json()) as T;
-}
+};

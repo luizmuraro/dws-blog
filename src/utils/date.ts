@@ -4,7 +4,7 @@ const postDateFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
 });
 
-export function formatPostDate(iso: string): string {
+export const formatPostDate = (iso: string): string => {
   const date = new Date(iso);
 
   if (Number.isNaN(date.getTime())) {
@@ -12,4 +12,4 @@ export function formatPostDate(iso: string): string {
   }
 
   return postDateFormatter.format(date);
-}
+};
