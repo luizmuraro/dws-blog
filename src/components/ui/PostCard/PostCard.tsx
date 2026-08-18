@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import type { CSSProperties } from 'react';
+import { useLineCount } from '@/hooks';
 import type { Post } from '@/types/domain';
 import { formatPostDate } from '@/utils/date';
 import { getLastName } from '@/utils/text';
@@ -9,8 +11,11 @@ interface PostCardProps {
   post: Post;
 }
 
+const SUMMARY_LINES = 4;
+
 const PostCard = ({ post }: PostCardProps) => {
   const [leadParagraph] = post.paragraphs;
+  const { ref: titleRef, lineCount: titleLines } = useLineCount<HTMLHeadingElement>();
 
   return (
     <article className={styles.card}>
@@ -22,12 +27,19 @@ const PostCard = ({ post }: PostCardProps) => {
           <span>{getLastName(post.author.name)}</span>
         </div>
         <div className={styles.summary}>
-          <h3 className={styles.title}>
+          <h3 className={styles.title} ref={titleRef}>
             <Link className={styles.link} to={`/posts/${post.id}`}>
               {post.title}
             </Link>
           </h3>
-          {leadParagraph && <p className={styles.lead}>{leadParagraph}</p>}
+          {leadParagraph && (
+            <p
+              className={styles.lead}
+              style={{ '--lead-lines': SUMMARY_LINES - titleLines } as CSSProperties}
+            >
+              {leadParagraph}
+            </p>
+          )}
         </div>
         {post.categories.length > 0 && (
           <ul className={styles.categories}>

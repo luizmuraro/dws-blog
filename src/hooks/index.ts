@@ -2,6 +2,8 @@ export { useAsync } from './useAsync';
 export type { UseAsyncResult } from './useAsync';
 export { useDropdown } from './useDropdown';
 export type { UseDropdownResult } from './useDropdown';
+export { useLineCount } from './useLineCount';
+export type { UseLineCountResult } from './useLineCount';
 export { usePosts } from './usePosts';
 export { usePost } from './usePost';
 export { usePostFilters } from './usePostFilters';

@@ -85,7 +85,7 @@
 
 .lead {
   @include type.body-small;
-  @include m.line-clamp(2);
+  @include m.line-clamp(var(--lead-lines, 2));
 
   color: var(--color-neutral-extra-dark);
 }
