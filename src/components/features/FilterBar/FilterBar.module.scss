@@ -17,7 +17,7 @@
 .skeletonButton {
   @include m.skeleton;
 
-  height: 32px;
+  height: 2rem;
   border-radius: var(--radius-pill);
 }
 
