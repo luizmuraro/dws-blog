@@ -14,8 +14,26 @@ const PostsListPage = () => {
     selectedAuthorIds,
     setSelectedCategoryIds,
     setSelectedAuthorIds,
+    hasOptions,
     filteredPosts,
   } = usePostFilters(posts);
+
+  const renderFilters = () => {
+    if (isLoading) return <FilterBarSkeleton />;
+
+    if (!hasOptions) return null;
+
+    return (
+      <FilterBar
+        categories={categoryOptions}
+        authors={authorOptions}
+        selectedCategoryIds={selectedCategoryIds}
+        selectedAuthorIds={selectedAuthorIds}
+        onCategoryChange={setSelectedCategoryIds}
+        onAuthorChange={setSelectedAuthorIds}
+      />
+    );
+  };
 
   const renderContent = () => {
     if (isLoading) {
@@ -53,18 +71,7 @@ const PostsListPage = () => {
   return (
     <section className={styles.page}>
       <h1 className={styles.heading}>DWS blog</h1>
-      {isLoading ? (
-        <FilterBarSkeleton />
-      ) : (
-        <FilterBar
-          categories={categoryOptions}
-          authors={authorOptions}
-          selectedCategoryIds={selectedCategoryIds}
-          selectedAuthorIds={selectedAuthorIds}
-          onCategoryChange={setSelectedCategoryIds}
-          onAuthorChange={setSelectedAuthorIds}
-        />
-      )}
+      {renderFilters()}
       {renderContent()}
     </section>
   );

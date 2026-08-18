@@ -10,6 +10,7 @@ export interface UsePostFiltersResult {
   selectedAuthorIds: string[];
   setSelectedCategoryIds: (selectedIds: string[]) => void;
   setSelectedAuthorIds: (selectedIds: string[]) => void;
+  hasOptions: boolean;
   filteredPosts: Post[];
 }
 
@@ -37,6 +38,7 @@ export const usePostFilters = (posts: Post[] | null): UsePostFiltersResult => {
     selectedAuthorIds,
     setSelectedCategoryIds,
     setSelectedAuthorIds,
+    hasOptions: categoryOptions.length > 0 || authorOptions.length > 0,
     filteredPosts,
   };
 };
