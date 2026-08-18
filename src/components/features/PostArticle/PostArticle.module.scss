@@ -1,0 +1,160 @@
+@use '../../../styles/mixins' as m;
+@use '../../../styles/typography' as type;
+
+.article {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+
+  @include m.from(tablet) {
+    gap: var(--space-24);
+  }
+}
+
+.title {
+  @include type.h1;
+
+  color: var(--color-primary-dark);
+}
+
+.author {
+  display: flex;
+  gap: var(--space-12);
+  align-items: center;
+
+  @include m.from(tablet) {
+    gap: var(--space-16);
+  }
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: cover;
+  background-color: var(--color-neutral-extra-light);
+  border-radius: 50%;
+
+  @include m.from(tablet) {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+
+.authorText {
+  @include type.caption;
+
+  display: flex;
+  flex-direction: column;
+  color: var(--color-primary-dark);
+
+  @include m.from(tablet) {
+    @include type.body-large;
+
+    gap: var(--space-4);
+  }
+}
+
+.authorName {
+  font-weight: 600;
+}
+
+.date {
+  color: var(--color-neutral-extra-dark);
+}
+
+.cover,
+.skeletonCover {
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+  background-color: var(--color-neutral-extra-light);
+  border-radius: var(--radius-md);
+
+  @include m.from(tablet) {
+    border-radius: var(--radius-lg);
+  }
+}
+
+.paragraph {
+  @include type.body-small;
+
+  line-height: 1.6;
+  color: var(--color-primary-dark);
+
+  @include m.from(tablet) {
+    @include type.body-large;
+
+    line-height: 1.6;
+  }
+}
+
+.skeletonTitle,
+.skeletonAvatar,
+.skeletonAuthorLine,
+.skeletonCover,
+.skeletonLine {
+  @include m.skeleton;
+}
+
+.skeletonTitle {
+  width: 80%;
+  height: 1.95rem;
+  border-radius: var(--radius-sm);
+
+  @include m.from(tablet) {
+    height: 4.55rem;
+  }
+}
+
+.skeletonAvatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+
+  @include m.from(tablet) {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+
+.skeletonAuthorLine {
+  width: 10rem;
+  height: 0.75rem;
+  border-radius: var(--radius-sm);
+
+  @include m.from(tablet) {
+    height: 1rem;
+  }
+}
+
+.skeletonAuthorLine:last-child {
+  width: 7rem;
+
+  margin-top: var(--space-4);
+
+  @include m.from(tablet) {
+    margin-top: 0;
+  }
+}
+
+.skeletonLine {
+  height: 0.875rem;
+  border-radius: var(--radius-sm);
+}
+
+.skeletonParagraph {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.skeletonParagraph .skeletonLine:last-child {
+  width: 80%;
+}

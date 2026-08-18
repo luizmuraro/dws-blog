@@ -1,3 +1,4 @@
+export { default as BackButton } from './BackButton/BackButton';
 export { default as CategoryTag } from './CategoryTag/CategoryTag';
 export { default as EmptyState } from './EmptyState/EmptyState';
 export { default as ErrorState } from './ErrorState/ErrorState';
