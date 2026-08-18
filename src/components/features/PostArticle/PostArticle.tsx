@@ -1,3 +1,5 @@
+import { FavoriteButton } from '@/components/ui';
+import { FavoriteButtonVariant } from '@/constants/favoriteButtonVariant';
 import type { Post } from '@/types/domain';
 import { formatPostDate } from '@/utils/date';
 import styles from './PostArticle.module.scss';
@@ -11,16 +13,20 @@ const PostArticle = ({ post }: PostArticleProps) => (
     <header className={styles.header}>
       <h1 className={styles.title}>{post.title}</h1>
 
-      <div className={styles.author}>
-        <img className={styles.avatar} src={post.author.profilePicture} alt="" />
-        <div className={styles.authorText}>
-          <p>
-            Written by: <span className={styles.authorName}>{post.author.name}</span>
-          </p>
-          <time className={styles.date} dateTime={post.publishedAt}>
-            {formatPostDate(post.publishedAt)}
-          </time>
+      <div className={styles.byline}>
+        <div className={styles.author}>
+          <img className={styles.avatar} src={post.author.profilePicture} alt="" />
+          <div className={styles.authorText}>
+            <p>
+              Written by: <span className={styles.authorName}>{post.author.name}</span>
+            </p>
+            <time className={styles.date} dateTime={post.publishedAt}>
+              {formatPostDate(post.publishedAt)}
+            </time>
+          </div>
         </div>
+
+        <FavoriteButton postId={post.id} variant={FavoriteButtonVariant.Inline} />
       </div>
     </header>
 

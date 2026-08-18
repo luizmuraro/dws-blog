@@ -3,6 +3,8 @@ export { default as CategoryTag } from './CategoryTag/CategoryTag';
 export { default as CategoryTagList } from './CategoryTagList/CategoryTagList';
 export { default as EmptyState } from './EmptyState/EmptyState';
 export { default as ErrorState } from './ErrorState/ErrorState';
+export { default as FavoriteButton } from './FavoriteButton/FavoriteButton';
+export { default as FavoritesToggle } from './FavoritesToggle/FavoritesToggle';
 export { default as FilterDropdown } from './FilterDropdown/FilterDropdown';
 export { default as HighlightedText } from './HighlightedText/HighlightedText';
 export { default as PillButton } from './PillButton/PillButton';

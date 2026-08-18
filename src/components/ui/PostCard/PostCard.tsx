@@ -5,6 +5,7 @@ import type { Post } from '@/types/domain';
 import { formatPostDate } from '@/utils/date';
 import { getLastName } from '@/utils/text';
 import CategoryTagList from '../CategoryTagList/CategoryTagList';
+import FavoriteButton from '../FavoriteButton/FavoriteButton';
 import PostMeta from '../PostMeta/PostMeta';
 import styles from './PostCard.module.scss';
 
@@ -21,6 +22,9 @@ const PostCard = ({ post }: PostCardProps) => {
   return (
     <article className={styles.card}>
       <img className={styles.thumbnail} src={post.thumbnailUrl} alt={post.title} loading="lazy" />
+      <div className={styles.favorite}>
+        <FavoriteButton postId={post.id} />
+      </div>
       <div className={styles.content}>
         <PostMeta items={[formatPostDate(post.publishedAt), getLastName(post.author.name)]} />
         <div className={styles.summary}>

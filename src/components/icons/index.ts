@@ -6,3 +6,4 @@ export { default as FiltersIcon } from './FiltersIcon';
 export { default as Logo } from './Logo';
 export { default as SearchIcon } from './SearchIcon';
 export { default as SortIcon } from './SortIcon';
+export { default as StarIcon } from './StarIcon';

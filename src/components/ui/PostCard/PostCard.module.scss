@@ -19,6 +19,13 @@
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
+.favorite {
+  position: absolute;
+  top: var(--space-8);
+  right: var(--space-8);
+  z-index: 1;
+}
+
 .content {
   display: flex;
   flex: 1;
@@ -40,7 +47,6 @@
   text-decoration: none;
 }
 
-/* Stretches the clickable area over the whole card without nesting links. */
 .link::after {
   position: absolute;
   inset: 0;
@@ -52,7 +58,6 @@
   color: var(--color-secondary-medium);
 }
 
-/* Move the focus ring to the stretched area so it frames the whole card. */
 .link:focus-visible {
   outline: none;
 }

@@ -4,6 +4,7 @@ const FilterBarSkeleton = () => (
   <div className={styles.bar} aria-hidden="true">
     <span className={styles.skeletonButton} />
     <span className={styles.skeletonButton} />
+    <span className={styles.skeletonButton} />
   </div>
 );
 

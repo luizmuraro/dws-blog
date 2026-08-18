@@ -21,10 +21,14 @@
   border-radius: var(--radius-pill);
 }
 
-.skeletonButton:first-child {
+.skeletonButton:nth-child(1) {
   width: 6.5rem;
 }
 
-.skeletonButton:last-child {
+.skeletonButton:nth-child(2) {
   width: 5.75rem;
+}
+
+.skeletonButton:nth-child(3) {
+  width: 7rem;
 }

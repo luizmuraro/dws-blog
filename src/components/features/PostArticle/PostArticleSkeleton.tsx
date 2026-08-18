@@ -8,12 +8,16 @@ const PostArticleSkeleton = () => (
     <div className={styles.header}>
       <span className={styles.skeletonTitle} />
 
-      <div className={styles.author}>
-        <span className={styles.skeletonAvatar} />
-        <div className={styles.authorText}>
-          <span className={styles.skeletonAuthorLine} />
-          <span className={styles.skeletonAuthorLine} />
+      <div className={styles.byline}>
+        <div className={styles.author}>
+          <span className={styles.skeletonAvatar} />
+          <div className={styles.authorText}>
+            <span className={styles.skeletonAuthorLine} />
+            <span className={styles.skeletonAuthorLine} />
+          </div>
         </div>
+
+        <span className={styles.skeletonFavorite} />
       </div>
     </div>
 

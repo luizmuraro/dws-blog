@@ -1,5 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { SortOrder } from '@/constants/sortOrder';
+import { selectFavoriteIds } from '@/store/favoritesSlice';
+import { useAppSelector } from '@/store/hooks';
 import type { Post } from '@/types/domain';
 import type { FilterOption } from '@/types/ui';
 import { filterPosts, getAuthorOptions, getCategoryOptions, sortPosts } from '@/utils/postFilters';
@@ -12,6 +14,9 @@ export interface UsePostFiltersResult {
   selectedAuthorIds: string[];
   setSelectedCategoryIds: (selectedIds: string[]) => void;
   setSelectedAuthorIds: (selectedIds: string[]) => void;
+  showFavoritesOnly: boolean;
+  setShowFavoritesOnly: (showFavoritesOnly: boolean) => void;
+  favoritesCount: number;
   hasOptions: boolean;
   sortOrder: SortOrder;
   toggleSortOrder: () => void;
@@ -21,7 +26,10 @@ export interface UsePostFiltersResult {
 export const usePostFilters = (posts: Post[] | null, searchTerm = ''): UsePostFiltersResult => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [selectedAuthorIds, setSelectedAuthorIds] = useState<string[]>([]);
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Newest);
+
+  const favoriteIds = useAppSelector(selectFavoriteIds);
 
   const loadedPosts = useMemo(() => posts ?? [], [posts]);
 
@@ -43,10 +51,18 @@ export const usePostFilters = (posts: Post[] | null, searchTerm = ''): UsePostFi
     const matching = filterPosts(matchingPosts, {
       categoryNames: selectedCategoryIds,
       authorIds: selectedAuthorIds,
+      favoriteIds: showFavoritesOnly ? favoriteIds : null,
     });
 
     return sortPosts(matching, sortOrder);
-  }, [matchingPosts, selectedCategoryIds, selectedAuthorIds, sortOrder]);
+  }, [
+    matchingPosts,
+    selectedCategoryIds,
+    selectedAuthorIds,
+    showFavoritesOnly,
+    favoriteIds,
+    sortOrder,
+  ]);
 
   return {
     categoryOptions,
@@ -55,6 +71,9 @@ export const usePostFilters = (posts: Post[] | null, searchTerm = ''): UsePostFi
     selectedAuthorIds,
     setSelectedCategoryIds,
     setSelectedAuthorIds,
+    showFavoritesOnly,
+    setShowFavoritesOnly,
+    favoritesCount: favoriteIds.length,
     hasOptions: categoryOptions.length > 0 || authorOptions.length > 0,
     sortOrder,
     toggleSortOrder,

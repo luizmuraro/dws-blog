@@ -6,6 +6,7 @@ import { getLastName } from '@/utils/text';
 export interface PostFilters {
   categoryNames: string[];
   authorIds: string[];
+  favoriteIds?: string[] | null;
 }
 
 export const getCategoryOptions = (posts: Post[]): FilterOption[] => {
@@ -22,14 +23,18 @@ export const getAuthorOptions = (posts: Post[]): FilterOption[] => {
     .sort((a, b) => a.name.localeCompare(b.name));
 };
 
-export const filterPosts = (posts: Post[], { categoryNames, authorIds }: PostFilters): Post[] =>
+export const filterPosts = (
+  posts: Post[],
+  { categoryNames, authorIds, favoriteIds = null }: PostFilters,
+): Post[] =>
   posts.filter((post) => {
     const matchesCategory =
       categoryNames.length === 0 ||
       post.categories.some((category) => categoryNames.includes(category.name));
     const matchesAuthor = authorIds.length === 0 || authorIds.includes(post.author.id);
+    const matchesFavorites = favoriteIds === null || favoriteIds.includes(post.id);
 
-    return matchesCategory && matchesAuthor;
+    return matchesCategory && matchesAuthor && matchesFavorites;
   });
 
 export const sortPosts = (posts: Post[], order: SortOrder): Post[] =>

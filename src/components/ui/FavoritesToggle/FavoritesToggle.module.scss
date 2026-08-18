@@ -1,0 +1,46 @@
+@use '../../../styles/typography' as type;
+
+.toggle {
+  display: inline-flex;
+  gap: var(--space-4);
+  align-items: center;
+  height: 2rem;
+  padding-inline: var(--space-12);
+  color: var(--color-secondary-medium);
+  cursor: pointer;
+  background-color: var(--color-neutral-white);
+  border: 1px solid var(--color-secondary-medium);
+  border-radius: var(--radius-pill);
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.toggle:hover {
+  background-color: color-mix(in srgb, var(--color-secondary-medium) 5%, transparent);
+}
+
+.active,
+.active:hover {
+  color: var(--color-neutral-white);
+  background-color: var(--color-secondary-medium);
+}
+
+.icon {
+  flex-shrink: 0;
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.label {
+  @include type.caption;
+
+  font-weight: 700;
+}
+
+.count {
+  @include type.caption;
+
+  font-weight: 700;
+  opacity: 0.7;
+}

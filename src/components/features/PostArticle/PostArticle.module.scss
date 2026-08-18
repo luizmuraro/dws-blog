@@ -23,6 +23,14 @@
   color: var(--color-primary-dark);
 }
 
+.byline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-16);
+  align-items: center;
+  justify-content: space-between;
+}
+
 .author {
   display: flex;
   gap: var(--space-12);
@@ -98,9 +106,16 @@
 .skeletonTitle,
 .skeletonAvatar,
 .skeletonAuthorLine,
+.skeletonFavorite,
 .skeletonCover,
 .skeletonLine {
   @include m.skeleton;
+}
+
+.skeletonFavorite {
+  width: 11rem;
+  height: 2.5rem;
+  border-radius: var(--radius-pill);
 }
 
 .skeletonTitle {

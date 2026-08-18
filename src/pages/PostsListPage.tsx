@@ -30,6 +30,9 @@ const PostsListPage = () => {
     selectedAuthorIds,
     setSelectedCategoryIds,
     setSelectedAuthorIds,
+    showFavoritesOnly,
+    setShowFavoritesOnly,
+    favoritesCount,
     hasOptions,
     sortOrder,
     toggleSortOrder,
@@ -47,8 +50,11 @@ const PostsListPage = () => {
         authors={authorOptions}
         selectedCategoryIds={selectedCategoryIds}
         selectedAuthorIds={selectedAuthorIds}
+        showFavoritesOnly={showFavoritesOnly}
+        favoritesCount={favoritesCount}
         onCategoryChange={setSelectedCategoryIds}
         onAuthorChange={setSelectedAuthorIds}
+        onFavoritesOnlyChange={setShowFavoritesOnly}
       />
     );
   };
@@ -64,10 +70,23 @@ const PostsListPage = () => {
         authors={authorOptions}
         selectedCategoryIds={selectedCategoryIds}
         selectedAuthorIds={selectedAuthorIds}
+        showFavoritesOnly={showFavoritesOnly}
+        favoritesCount={favoritesCount}
         onCategoryChange={setSelectedCategoryIds}
         onAuthorChange={setSelectedAuthorIds}
+        onFavoritesOnlyChange={setShowFavoritesOnly}
       />
     );
+  };
+
+  const getEmptyMessage = () => {
+    if (showFavoritesOnly) {
+      return favoritesCount === 0
+        ? 'You have not favorited any posts yet. Tap the star on a post to save it here.'
+        : 'No favorites match the current filters.';
+    }
+
+    return searchTerm ? `No posts found for “${searchTerm}”` : 'No posts found';
   };
 
   const renderContent = () => {
@@ -89,11 +108,7 @@ const PostsListPage = () => {
     }
 
     if (visiblePosts.length === 0) {
-      return (
-        <EmptyState
-          message={searchTerm ? `No posts found for “${searchTerm}”` : 'No posts found'}
-        />
-      );
+      return <EmptyState message={getEmptyMessage()} />;
     }
 
     return (
