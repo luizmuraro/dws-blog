@@ -23,11 +23,23 @@ export interface UsePostFiltersResult {
   visiblePosts: Post[];
 }
 
-export const usePostFilters = (posts: Post[] | null, searchTerm = ''): UsePostFiltersResult => {
-  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
+export const usePostFilters = (
+  posts: Post[] | null,
+  searchTerm = '',
+  categoryParam = '',
+): UsePostFiltersResult => {
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>(
+    categoryParam ? [categoryParam] : [],
+  );
   const [selectedAuthorIds, setSelectedAuthorIds] = useState<string[]>([]);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Newest);
+  const [lastCategoryParam, setLastCategoryParam] = useState(categoryParam);
+
+  if (lastCategoryParam !== categoryParam) {
+    setLastCategoryParam(categoryParam);
+    setSelectedCategoryIds(categoryParam ? [categoryParam] : []);
+  }
 
   const favoriteIds = useAppSelector(selectFavoriteIds);
 

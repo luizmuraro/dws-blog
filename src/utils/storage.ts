@@ -1,11 +1,16 @@
-const FAVORITES_KEY = 'dws-blog:favorites';
+export const StorageKey = {
+  Favorites: 'dws-blog:favorites',
+  RecentSearches: 'dws-blog:recent-searches',
+} as const;
+
+export type StorageKey = (typeof StorageKey)[keyof typeof StorageKey];
 
 const isStringArray = (value: unknown): value is string[] =>
   Array.isArray(value) && value.every((item) => typeof item === 'string');
 
-export const readFavoriteIds = (): string[] => {
+export const readStringArray = (key: StorageKey): string[] => {
   try {
-    const stored = window.localStorage.getItem(FAVORITES_KEY);
+    const stored = window.localStorage.getItem(key);
 
     if (!stored) return [];
 
@@ -17,10 +22,10 @@ export const readFavoriteIds = (): string[] => {
   }
 };
 
-export const writeFavoriteIds = (ids: string[]): void => {
+export const writeStringArray = (key: StorageKey, values: string[]): void => {
   try {
-    window.localStorage.setItem(FAVORITES_KEY, JSON.stringify(ids));
+    window.localStorage.setItem(key, JSON.stringify(values));
   } catch {
-    /* A favorite that cannot be persisted still works for the session. */
+    /* A list that cannot be persisted still works for the session. */
   }
 };

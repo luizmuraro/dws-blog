@@ -1,5 +1,7 @@
 export { useAsync } from './useAsync';
 export type { UseAsyncResult } from './useAsync';
+export { useCategories } from './useCategories';
+export type { UseCategoriesResult } from './useCategories';
 export { useDebouncedValue } from './useDebouncedValue';
 export { useDropdown } from './useDropdown';
 export type { UseDropdownResult } from './useDropdown';

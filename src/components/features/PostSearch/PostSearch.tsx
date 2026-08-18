@@ -3,13 +3,17 @@ import type { ChangeEvent, FormEvent } from 'react';
 import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeftIcon, CloseIcon, SearchIcon } from '@/components/icons';
 import { SearchVariant } from '@/constants/searchVariant';
-import { useDropdown, usePostSearch } from '@/hooks';
+import { useCategories, useDropdown, usePostSearch } from '@/hooks';
+import { useAppDispatch } from '@/store/hooks';
+import { addRecentSearch } from '@/store/searchSlice';
 import { formatResultCount } from '@/utils/search';
 import SearchResults from './SearchResults';
+import SearchSuggestions from './SearchSuggestions';
 import styles from './PostSearch.module.scss';
 
 const PostSearch = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
   const committedTerm = searchParams.get('q') ?? '';
 
@@ -36,6 +40,7 @@ const PostSearch = () => {
   const wasMobileOpen = useRef(false);
 
   const search = usePostSearch(term);
+  const categories = useCategories(isPanelOpen || isMobileOpen);
   const resultsPath = `/?${createSearchParams({ q: term.trim() })}`;
 
   if (lastCommittedTerm !== committedTerm) {
@@ -70,14 +75,28 @@ const PostSearch = () => {
     setTerm('');
   };
 
-  const submitSearch = (event: FormEvent) => {
-    event.preventDefault();
+  const runSearch = (rawTerm: string) => {
+    const trimmed = rawTerm.trim();
 
-    if (!term.trim()) return;
+    if (!trimmed) return;
 
+    dispatch(addRecentSearch(trimmed));
+    setTerm(trimmed);
     closePanel();
     closeMobile();
-    navigate(resultsPath);
+    navigate(`/?${createSearchParams({ q: trimmed })}`);
+  };
+
+  const submitSearch = (event: FormEvent) => {
+    event.preventDefault();
+    runSearch(term);
+  };
+
+  const openCategory = (name: string) => {
+    setTerm('');
+    closePanel();
+    closeMobile();
+    navigate(`/?${createSearchParams({ category: name })}`);
   };
 
   const hasSettledResults = search.hasQuery && !search.isPending && !search.isLoading;
@@ -115,14 +134,23 @@ const PostSearch = () => {
           </button>
         </form>
 
-        {isPanelOpen && search.hasQuery && (
-          <SearchResults
-            variant={SearchVariant.Desktop}
-            search={search}
-            resultsPath={resultsPath}
-            onClose={closePanel}
-          />
-        )}
+        {isPanelOpen &&
+          (search.hasQuery ? (
+            <SearchResults
+              variant={SearchVariant.Desktop}
+              search={search}
+              resultsPath={resultsPath}
+              onClose={closePanel}
+            />
+          ) : (
+            <SearchSuggestions
+              variant={SearchVariant.Desktop}
+              categories={categories}
+              onSelectTerm={runSearch}
+              onSelectCategory={openCategory}
+              onClose={closePanel}
+            />
+          ))}
       </div>
 
       {isMobileOpen && (
@@ -155,12 +183,22 @@ const PostSearch = () => {
             </button>
           </form>
 
-          <SearchResults
-            variant={SearchVariant.Mobile}
-            search={search}
-            resultsPath={resultsPath}
-            onClose={closeMobile}
-          />
+          {search.hasQuery ? (
+            <SearchResults
+              variant={SearchVariant.Mobile}
+              search={search}
+              resultsPath={resultsPath}
+              onClose={closeMobile}
+            />
+          ) : (
+            <SearchSuggestions
+              variant={SearchVariant.Mobile}
+              categories={categories}
+              onSelectTerm={runSearch}
+              onSelectCategory={openCategory}
+              onClose={closeMobile}
+            />
+          )}
         </div>
       )}
 

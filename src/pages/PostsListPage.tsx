@@ -21,6 +21,7 @@ const SKELETON_COUNT = 6;
 const PostsListPage = () => {
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get('q') ?? '';
+  const categoryParam = searchParams.get('category') ?? '';
 
   const { data: posts, isLoading, error, retry } = usePosts();
   const {
@@ -37,7 +38,7 @@ const PostsListPage = () => {
     sortOrder,
     toggleSortOrder,
     visiblePosts,
-  } = usePostFilters(posts, searchTerm);
+  } = usePostFilters(posts, searchTerm, categoryParam);
 
   const renderFilters = () => {
     if (isLoading) return <FilterBarSkeleton />;

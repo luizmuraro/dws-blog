@@ -1,8 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { EmptyState, ErrorState, PillButton } from '@/components/ui';
 import { SearchVariant } from '@/constants/searchVariant';
-import { MIN_SEARCH_LENGTH } from '@/hooks';
 import type { UsePostSearchResult } from '@/hooks';
+import { useAppDispatch } from '@/store/hooks';
+import { addRecentSearch } from '@/store/searchSlice';
 import { formatResultCount } from '@/utils/search';
 import SearchResultItem from './SearchResultItem';
 import SearchResultsSkeleton from './SearchResultsSkeleton';
@@ -22,6 +23,7 @@ const PREVIEW_LIMIT: Record<SearchVariant, number> = {
 
 const SearchResults = ({ variant, search, resultsPath, onClose }: SearchResultsProps) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { term, results, isLoading, isPending, hasQuery, error, retry } = search;
 
   const isMobile = variant === SearchVariant.Mobile;
@@ -31,16 +33,17 @@ const SearchResults = ({ variant, search, resultsPath, onClose }: SearchResultsP
   const hasMore = results.length > previewLimit;
   const hasFooter = hasResults && (isMobile || hasMore);
 
-  const seeAllResults = () => {
+  const commitTerm = () => {
+    dispatch(addRecentSearch(term));
     onClose();
+  };
+
+  const seeAllResults = () => {
+    commitTerm();
     navigate(resultsPath);
   };
 
   const renderBody = () => {
-    if (!hasQuery) {
-      return <p className={styles.hint}>Type at least {MIN_SEARCH_LENGTH} characters to search.</p>;
-    }
-
     if (isLoading || isPending) return <SearchResultsSkeleton count={previewLimit} />;
 
     if (error) {
@@ -63,7 +66,7 @@ const SearchResults = ({ variant, search, resultsPath, onClose }: SearchResultsP
       <ul className={styles.list}>
         {previewedPosts.map((post) => (
           <li key={post.id}>
-            <SearchResultItem post={post} query={term} onSelect={onClose} />
+            <SearchResultItem post={post} query={term} onSelect={commitTerm} />
           </li>
         ))}
       </ul>
@@ -89,7 +92,7 @@ const SearchResults = ({ variant, search, resultsPath, onClose }: SearchResultsP
             <PillButton onClick={seeAllResults}>See all {results.length} results</PillButton>
           ) : (
             <>
-              <Link className={styles.seeAll} to={resultsPath} onClick={onClose}>
+              <Link className={styles.seeAll} to={resultsPath} onClick={commitTerm}>
                 See all {results.length} results
               </Link>
               <span className={styles.shortcut} aria-hidden="true">
