@@ -1,4 +1,4 @@
-import { FilterBar } from '@/components/features';
+import { FilterBar, FilterBarSkeleton } from '@/components/features';
 import { EmptyState, ErrorState, PostCard, PostCardSkeleton } from '@/components/ui';
 import { usePostFilters, usePosts } from '@/hooks';
 import styles from './PostsListPage.module.scss';
@@ -53,14 +53,18 @@ const PostsListPage = () => {
   return (
     <section className={styles.page}>
       <h1 className={styles.heading}>DWS blog</h1>
-      <FilterBar
-        categories={categoryOptions}
-        authors={authorOptions}
-        selectedCategoryIds={selectedCategoryIds}
-        selectedAuthorIds={selectedAuthorIds}
-        onCategoryChange={setSelectedCategoryIds}
-        onAuthorChange={setSelectedAuthorIds}
-      />
+      {isLoading ? (
+        <FilterBarSkeleton />
+      ) : (
+        <FilterBar
+          categories={categoryOptions}
+          authors={authorOptions}
+          selectedCategoryIds={selectedCategoryIds}
+          selectedAuthorIds={selectedAuthorIds}
+          onCategoryChange={setSelectedCategoryIds}
+          onAuthorChange={setSelectedAuthorIds}
+        />
+      )}
       {renderContent()}
     </section>
   );
