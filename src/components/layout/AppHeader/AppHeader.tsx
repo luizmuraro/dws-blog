@@ -33,63 +33,65 @@ const AppHeader = () => {
 
   return (
     <header className={styles.header}>
-      {isSearchOpen && (
-        <form className={styles.mobileSearch} role="search" onSubmit={preventSubmit}>
+      <div className={styles.inner}>
+        {isSearchOpen && (
+          <form className={styles.mobileSearch} role="search" onSubmit={preventSubmit}>
+            <button
+              className={styles.iconButton}
+              type="button"
+              aria-label="Close search"
+              onClick={closeSearch}
+            >
+              <ArrowLeftIcon />
+            </button>
+            <input
+              className={styles.input}
+              ref={mobileInputRef}
+              type="search"
+              placeholder="Search"
+              aria-label="Search posts"
+              value={term}
+              onChange={updateTerm}
+            />
+            <button
+              className={styles.iconButton}
+              type="button"
+              aria-label="Clear search"
+              onClick={clearTerm}
+            >
+              <CloseIcon />
+            </button>
+          </form>
+        )}
+
+        <div className={`${styles.row} ${isSearchOpen ? styles.rowSearching : ''}`}>
+          <Link className={styles.logo} to="/" aria-label="DWS Blog home">
+            <Logo />
+          </Link>
+
           <button
-            className={styles.iconButton}
+            className={styles.searchTrigger}
             type="button"
-            aria-label="Close search"
-            onClick={closeSearch}
+            aria-label="Open search"
+            onClick={openSearch}
           >
-            <ArrowLeftIcon />
-          </button>
-          <input
-            className={styles.input}
-            ref={mobileInputRef}
-            type="search"
-            placeholder="Search"
-            aria-label="Search posts"
-            value={term}
-            onChange={updateTerm}
-          />
-          <button
-            className={styles.iconButton}
-            type="button"
-            aria-label="Clear search"
-            onClick={clearTerm}
-          >
-            <CloseIcon />
-          </button>
-        </form>
-      )}
-
-      <div className={`${styles.row} ${isSearchOpen ? styles.rowSearching : ''}`}>
-        <Link className={styles.logo} to="/" aria-label="DWS Blog home">
-          <Logo />
-        </Link>
-
-        <button
-          className={styles.searchTrigger}
-          type="button"
-          aria-label="Open search"
-          onClick={openSearch}
-        >
-          <SearchIcon />
-        </button>
-
-        <form className={styles.desktopSearch} role="search" onSubmit={preventSubmit}>
-          <input
-            className={styles.input}
-            type="search"
-            placeholder="Search"
-            aria-label="Search posts"
-            value={term}
-            onChange={updateTerm}
-          />
-          <button className={styles.searchSubmit} type="submit" aria-label="Search">
             <SearchIcon />
           </button>
-        </form>
+
+          <form className={styles.desktopSearch} role="search" onSubmit={preventSubmit}>
+            <input
+              className={styles.input}
+              type="search"
+              placeholder="Search"
+              aria-label="Search posts"
+              value={term}
+              onChange={updateTerm}
+            />
+            <button className={styles.searchSubmit} type="submit" aria-label="Search">
+              <SearchIcon />
+            </button>
+          </form>
+        </div>
       </div>
     </header>
   );

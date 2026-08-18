@@ -8,9 +8,7 @@
   @include m.from(desktop) {
     display: flex;
     flex-direction: column;
-    flex-shrink: 0;
     gap: var(--space-16);
-    width: 264px;
     padding: var(--space-16);
     background-color: var(--color-neutral-lightest);
     border-radius: var(--radius-md);
