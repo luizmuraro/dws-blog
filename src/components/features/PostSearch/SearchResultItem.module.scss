@@ -45,6 +45,10 @@
   min-width: 0;
 }
 
+.content > ul {
+  margin-block-start: var(--space-4);
+}
+
 .title {
   @include type.body-large-semibold;
   @include m.line-clamp(2);

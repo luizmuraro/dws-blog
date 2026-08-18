@@ -16,6 +16,13 @@
   }
 }
 
+.header {
+  display: flex;
+  gap: var(--space-8);
+  align-items: center;
+  justify-content: space-between;
+}
+
 .title {
   display: flex;
   gap: var(--space-8);
@@ -35,6 +42,24 @@
   width: 1.5rem;
   height: 1.5rem;
   color: var(--color-primary-dark);
+}
+
+.clear {
+  @include type.body-small;
+
+  flex-shrink: 0;
+  padding: 0;
+  font-weight: 600;
+  color: var(--color-secondary-medium);
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  transition: color 0.2s ease;
+}
+
+.clear:hover {
+  color: var(--color-accent1-dark);
+  text-decoration: underline;
 }
 
 .group {

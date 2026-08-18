@@ -89,14 +89,33 @@ const FilterSidebar = ({
     onAuthorChange(draft.authorIds);
   };
 
+  const clearFilters = () => {
+    setDraft({ categoryIds: [], authorIds: [] });
+    onCategoryChange([]);
+    onAuthorChange([]);
+  };
+
+  const hasFilters =
+    draft.categoryIds.length > 0 ||
+    draft.authorIds.length > 0 ||
+    applied.categoryIds.length > 0 ||
+    applied.authorIds.length > 0;
+
   return (
     <aside className={styles.sidebar} aria-label="Filters">
-      <h2 className={styles.title}>
-        <span className={styles.titleIcon}>
-          <FiltersIcon />
-        </span>
-        Filters
-      </h2>
+      <div className={styles.header}>
+        <h2 className={styles.title}>
+          <span className={styles.titleIcon}>
+            <FiltersIcon />
+          </span>
+          Filters
+        </h2>
+        {hasFilters && (
+          <button className={styles.clear} type="button" onClick={clearFilters}>
+            Clear filters
+          </button>
+        )}
+      </div>
 
       {categories.length > 0 && (
         <FilterGroup

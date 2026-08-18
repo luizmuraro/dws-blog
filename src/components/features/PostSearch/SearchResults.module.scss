@@ -2,6 +2,11 @@
 @use '../../../styles/typography' as type;
 
 .panel {
+  position: absolute;
+  top: calc(100% + var(--space-8));
+  right: 0;
+  left: 0;
+  z-index: 20;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -11,21 +16,17 @@
 }
 
 .panelDesktop {
-  position: absolute;
-  top: calc(100% + var(--space-8));
-  right: 0;
-  left: 0;
-  z-index: 20;
   box-shadow: 0 4px 29.6px rgb(91 123 193 / 24%);
 }
 
 .panelMobile {
-  flex: 1;
+  max-height: min(60vh, 32rem);
   box-shadow: 0 4px 16px rgb(91 123 193 / 29%);
 }
 
 .header {
   display: flex;
+  flex-shrink: 0;
   gap: var(--space-8);
   align-items: baseline;
   justify-content: space-between;
@@ -54,13 +55,17 @@
   overflow: hidden;
 }
 
-.panelMobile .body {
+.bodyClipped {
   mask-image: linear-gradient(to bottom, #000 calc(100% - 3rem), transparent);
 }
 
 .list {
   padding: 0;
   list-style: none;
+}
+
+.panelMobile .list li + li {
+  border-top: 1px solid var(--color-neutral-extra-light);
 }
 
 .hint,
@@ -77,6 +82,7 @@
 
 .footer {
   display: flex;
+  flex-shrink: 0;
   gap: var(--space-16);
   align-items: center;
   justify-content: space-between;

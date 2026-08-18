@@ -15,11 +15,9 @@ interface SearchResultsProps {
   onClose: () => void;
 }
 
-const DESKTOP_PREVIEW_LIMIT = 3;
-
-const SKELETON_ROWS: Record<SearchVariant, number> = {
-  [SearchVariant.Desktop]: DESKTOP_PREVIEW_LIMIT,
-  [SearchVariant.Mobile]: 5,
+const PREVIEW_LIMIT: Record<SearchVariant, number> = {
+  [SearchVariant.Desktop]: 3,
+  [SearchVariant.Mobile]: 4,
 };
 
 const SearchResults = ({ variant, search, resultsPath, onClose }: SearchResultsProps) => {
@@ -27,9 +25,11 @@ const SearchResults = ({ variant, search, resultsPath, onClose }: SearchResultsP
   const { term, results, isLoading, isPending, hasQuery, error, retry } = search;
 
   const isMobile = variant === SearchVariant.Mobile;
-  const previewedPosts = isMobile ? results : results.slice(0, DESKTOP_PREVIEW_LIMIT);
+  const previewLimit = PREVIEW_LIMIT[variant];
+  const previewedPosts = results.slice(0, previewLimit);
   const hasResults = hasQuery && !isLoading && !isPending && !error && results.length > 0;
-  const hasFooter = hasResults && (isMobile || results.length > DESKTOP_PREVIEW_LIMIT);
+  const hasMore = results.length > previewLimit;
+  const hasFooter = hasResults && (isMobile || hasMore);
 
   const seeAllResults = () => {
     onClose();
@@ -41,7 +41,7 @@ const SearchResults = ({ variant, search, resultsPath, onClose }: SearchResultsP
       return <p className={styles.hint}>Type at least {MIN_SEARCH_LENGTH} characters to search.</p>;
     }
 
-    if (isLoading || isPending) return <SearchResultsSkeleton count={SKELETON_ROWS[variant]} />;
+    if (isLoading || isPending) return <SearchResultsSkeleton count={previewLimit} />;
 
     if (error) {
       return (
@@ -79,7 +79,9 @@ const SearchResults = ({ variant, search, resultsPath, onClose }: SearchResultsP
         )}
       </div>
 
-      <div className={styles.body}>{renderBody()}</div>
+      <div className={`${styles.body} ${isMobile && hasMore ? styles.bodyClipped : ''}`}>
+        {renderBody()}
+      </div>
 
       {hasFooter && (
         <div className={styles.footer}>

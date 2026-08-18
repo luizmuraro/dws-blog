@@ -49,7 +49,7 @@
 .blue {
   --size: calc(112.8 * var(--u));
 
-  bottom: calc(-8 * var(--u));
+  top: calc(max(100vh, 100% - 104.8 * var(--u)));
   left: calc(20.1 * var(--u));
   background: radial-gradient(50% 50% at 50% 50%, #3559aa 17.5%, var(--fade) 100%);
   filter: blur(68.1px);

@@ -25,14 +25,15 @@ const PostSearch = () => {
   } = useDropdown<HTMLInputElement>();
 
   const {
-    isOpen: isOverlayOpen,
-    open: openOverlay,
-    close: closeOverlay,
-    containerRef: overlayRef,
-    triggerRef: overlayTriggerRef,
+    isOpen: isMobileOpen,
+    open: openMobile,
+    close: closeMobile,
+    containerRef: mobileContainerRef,
+    triggerRef: mobileTriggerRef,
   } = useDropdown();
 
-  const overlayInputRef = useRef<HTMLInputElement>(null);
+  const mobileInputRef = useRef<HTMLInputElement>(null);
+  const wasMobileOpen = useRef(false);
 
   const search = usePostSearch(term);
   const resultsPath = `/?${createSearchParams({ q: term.trim() })}`;
@@ -43,19 +44,14 @@ const PostSearch = () => {
   }
 
   useEffect(() => {
-    if (isOverlayOpen) overlayInputRef.current?.focus();
-  }, [isOverlayOpen]);
+    if (isMobileOpen) {
+      mobileInputRef.current?.focus();
+    } else if (wasMobileOpen.current) {
+      mobileTriggerRef.current?.focus();
+    }
 
-  useEffect(() => {
-    if (!isOverlayOpen) return;
-
-    const { overflow } = document.body.style;
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.body.style.overflow = overflow;
-    };
-  }, [isOverlayOpen]);
+    wasMobileOpen.current = isMobileOpen;
+  }, [isMobileOpen, mobileTriggerRef]);
 
   const updateTerm = (event: ChangeEvent<HTMLInputElement>) => setTerm(event.target.value);
 
@@ -66,11 +62,11 @@ const PostSearch = () => {
 
   const clearTerm = () => {
     setTerm('');
-    overlayInputRef.current?.focus();
+    mobileInputRef.current?.focus();
   };
 
-  const dismissOverlay = () => {
-    closeOverlay();
+  const collapseMobile = () => {
+    closeMobile();
     setTerm('');
   };
 
@@ -80,21 +76,21 @@ const PostSearch = () => {
     if (!term.trim()) return;
 
     closePanel();
-    closeOverlay();
+    closeMobile();
     navigate(resultsPath);
   };
 
   const hasSettledResults = search.hasQuery && !search.isPending && !search.isLoading;
 
   return (
-    <div className={styles.search}>
+    <div className={styles.search} data-expanded={isMobileOpen}>
       <button
         className={styles.trigger}
-        ref={overlayTriggerRef}
+        ref={mobileTriggerRef}
         type="button"
         aria-label="Open search"
-        aria-expanded={isOverlayOpen}
-        onClick={openOverlay}
+        aria-expanded={isMobileOpen}
+        onClick={openMobile}
       >
         <SearchIcon />
       </button>
@@ -129,20 +125,20 @@ const PostSearch = () => {
         )}
       </div>
 
-      {isOverlayOpen && (
-        <div className={styles.overlay} ref={overlayRef}>
+      {isMobileOpen && (
+        <div className={styles.mobile} ref={mobileContainerRef}>
           <form className={styles.mobileField} role="search" onSubmit={submitSearch}>
             <button
               className={styles.iconButton}
               type="button"
               aria-label="Close search"
-              onClick={dismissOverlay}
+              onClick={collapseMobile}
             >
               <ArrowLeftIcon />
             </button>
             <input
               className={styles.input}
-              ref={overlayInputRef}
+              ref={mobileInputRef}
               type="search"
               placeholder="Search"
               aria-label="Search posts"
@@ -163,7 +159,7 @@ const PostSearch = () => {
             variant={SearchVariant.Mobile}
             search={search}
             resultsPath={resultsPath}
-            onClose={closeOverlay}
+            onClose={closeMobile}
           />
         </div>
       )}

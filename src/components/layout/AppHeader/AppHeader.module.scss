@@ -20,6 +20,14 @@
   }
 }
 
+.row:has(> [data-expanded='true']) .logo {
+  display: none;
+
+  @include m.from(desktop) {
+    display: inline-flex;
+  }
+}
+
 .logo {
   display: inline-flex;
   flex-shrink: 1;
