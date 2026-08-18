@@ -1,9 +1,13 @@
 export { default as BackButton } from './BackButton/BackButton';
 export { default as CategoryTag } from './CategoryTag/CategoryTag';
+export { default as CategoryTagList } from './CategoryTagList/CategoryTagList';
 export { default as EmptyState } from './EmptyState/EmptyState';
 export { default as ErrorState } from './ErrorState/ErrorState';
 export { default as FilterDropdown } from './FilterDropdown/FilterDropdown';
+export { default as HighlightedText } from './HighlightedText/HighlightedText';
+export { default as PillButton } from './PillButton/PillButton';
 export { default as PostCard } from './PostCard/PostCard';
 export { default as PostCardSkeleton } from './PostCardSkeleton/PostCardSkeleton';
+export { default as PostMeta } from './PostMeta/PostMeta';
 export { default as SortToggle } from './SortToggle/SortToggle';
 export { default as SortToggleSkeleton } from './SortToggle/SortToggleSkeleton';

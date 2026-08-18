@@ -89,22 +89,6 @@
   border-color: var(--color-accent1-dark);
 }
 
-.apply {
-  @include type.body-large-semibold;
-
-  padding: var(--space-8) var(--space-16);
-  color: var(--color-neutral-lightest);
-  cursor: pointer;
-  background-color: var(--color-secondary-medium);
-  border: 0;
-  border-radius: var(--radius-pill);
-  transition: background-color 0.2s ease;
-}
-
-.apply:hover {
-  background-color: var(--color-secondary-dark);
-}
-
 .skeletonTitle,
 .skeletonLabel,
 .skeletonOption,

@@ -1,0 +1,22 @@
+@use '../../../styles/typography' as type;
+
+.pill {
+  @include type.body-large-semibold;
+
+  display: inline-flex;
+  gap: var(--space-8);
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8) var(--space-16);
+  color: var(--color-neutral-lightest);
+  text-align: center;
+  cursor: pointer;
+  background-color: var(--color-secondary-medium);
+  border: 0;
+  border-radius: var(--radius-pill);
+  transition: background-color 0.2s ease;
+}
+
+.pill:hover {
+  background-color: var(--color-secondary-dark);
+}

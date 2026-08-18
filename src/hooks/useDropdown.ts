@@ -1,21 +1,23 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { RefObject } from 'react';
 
-export interface UseDropdownResult {
+export interface UseDropdownResult<T extends HTMLElement> {
   isOpen: boolean;
+  open: () => void;
   toggle: () => void;
   close: () => void;
   containerRef: RefObject<HTMLDivElement | null>;
-  triggerRef: RefObject<HTMLButtonElement | null>;
+  triggerRef: RefObject<T | null>;
 }
 
-export const useDropdown = (): UseDropdownResult => {
+export const useDropdown = <T extends HTMLElement = HTMLButtonElement>(): UseDropdownResult<T> => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<T>(null);
 
+  const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => setIsOpen(false), []);
-  const toggle = useCallback(() => setIsOpen((open) => !open), []);
+  const toggle = useCallback(() => setIsOpen((isCurrentlyOpen) => !isCurrentlyOpen), []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -42,5 +44,5 @@ export const useDropdown = (): UseDropdownResult => {
     };
   }, [isOpen]);
 
-  return { isOpen, toggle, close, containerRef, triggerRef };
+  return { isOpen, open, toggle, close, containerRef, triggerRef };
 };

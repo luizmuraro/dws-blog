@@ -1,0 +1,74 @@
+@use '../../../styles/mixins' as m;
+@use '../../../styles/typography' as type;
+
+.item {
+  position: relative;
+  display: flex;
+  gap: var(--space-12);
+  align-items: flex-start;
+  padding: var(--space-12) var(--space-16);
+  border-inline-start: 2px solid transparent;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+
+  @include m.from(desktop) {
+    gap: var(--space-16);
+  }
+}
+
+.item:hover,
+.item:focus-within {
+  background-color: color-mix(in srgb, var(--color-secondary-medium) 7%, transparent);
+  border-inline-start-color: var(--color-secondary-medium);
+}
+
+.thumbnail {
+  flex-shrink: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: cover;
+  background-color: var(--color-neutral-extra-light);
+  border-radius: var(--radius-md);
+
+  @include m.from(desktop) {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.title {
+  @include type.body-large-semibold;
+  @include m.line-clamp(2);
+
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.link::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.link:focus-visible::after {
+  outline: 2px solid var(--color-accent1-medium);
+  outline-offset: -2px;
+}

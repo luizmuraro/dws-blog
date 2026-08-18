@@ -75,3 +75,28 @@
     grid-column: 1 / -1;
   }
 }
+
+.searchSummary {
+  @include type.body-small;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8) var(--space-16);
+  align-items: baseline;
+  color: var(--color-neutral-extra-dark);
+}
+
+.searchTerm {
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+.clearSearch {
+  font-weight: 600;
+  color: var(--color-secondary-medium);
+  text-decoration: none;
+}
+
+.clearSearch:hover {
+  text-decoration: underline;
+}

@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import { FiltersIcon } from '@/components/icons';
+import { PillButton } from '@/components/ui';
 import type { FilterOption } from '@/types/ui';
 import { toggleItem } from '@/utils/array';
 import styles from './FilterSidebar.module.scss';
@@ -114,9 +115,7 @@ const FilterSidebar = ({
         />
       )}
 
-      <button className={styles.apply} type="button" onClick={applyFilters}>
-        Apply filters
-      </button>
+      <PillButton onClick={applyFilters}>Apply filters</PillButton>
     </aside>
   );
 };

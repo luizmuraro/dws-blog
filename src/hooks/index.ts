@@ -1,5 +1,6 @@
 export { useAsync } from './useAsync';
 export type { UseAsyncResult } from './useAsync';
+export { useDebouncedValue } from './useDebouncedValue';
 export { useDropdown } from './useDropdown';
 export type { UseDropdownResult } from './useDropdown';
 export { useLineCount } from './useLineCount';
@@ -8,3 +9,5 @@ export { usePosts } from './usePosts';
 export { usePost } from './usePost';
 export { usePostFilters } from './usePostFilters';
 export type { UsePostFiltersResult } from './usePostFilters';
+export { usePostSearch, MIN_SEARCH_LENGTH, SEARCH_DEBOUNCE_MS } from './usePostSearch';
+export type { UsePostSearchResult } from './usePostSearch';

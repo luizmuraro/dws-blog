@@ -3,6 +3,7 @@ import { SortOrder } from '@/constants/sortOrder';
 import type { Post } from '@/types/domain';
 import type { FilterOption } from '@/types/ui';
 import { filterPosts, getAuthorOptions, getCategoryOptions, sortPosts } from '@/utils/postFilters';
+import { searchPosts } from '@/utils/search';
 
 export interface UsePostFiltersResult {
   categoryOptions: FilterOption[];
@@ -17,14 +18,20 @@ export interface UsePostFiltersResult {
   visiblePosts: Post[];
 }
 
-export const usePostFilters = (posts: Post[] | null): UsePostFiltersResult => {
+export const usePostFilters = (posts: Post[] | null, searchTerm = ''): UsePostFiltersResult => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [selectedAuthorIds, setSelectedAuthorIds] = useState<string[]>([]);
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.Newest);
 
   const loadedPosts = useMemo(() => posts ?? [], [posts]);
-  const categoryOptions = useMemo(() => getCategoryOptions(loadedPosts), [loadedPosts]);
-  const authorOptions = useMemo(() => getAuthorOptions(loadedPosts), [loadedPosts]);
+
+  const matchingPosts = useMemo(
+    () => searchPosts(loadedPosts, searchTerm),
+    [loadedPosts, searchTerm],
+  );
+
+  const categoryOptions = useMemo(() => getCategoryOptions(matchingPosts), [matchingPosts]);
+  const authorOptions = useMemo(() => getAuthorOptions(matchingPosts), [matchingPosts]);
 
   const toggleSortOrder = useCallback(
     () =>
@@ -33,13 +40,13 @@ export const usePostFilters = (posts: Post[] | null): UsePostFiltersResult => {
   );
 
   const visiblePosts = useMemo(() => {
-    const matching = filterPosts(loadedPosts, {
+    const matching = filterPosts(matchingPosts, {
       categoryNames: selectedCategoryIds,
       authorIds: selectedAuthorIds,
     });
 
     return sortPosts(matching, sortOrder);
-  }, [loadedPosts, selectedCategoryIds, selectedAuthorIds, sortOrder]);
+  }, [matchingPosts, selectedCategoryIds, selectedAuthorIds, sortOrder]);
 
   return {
     categoryOptions,

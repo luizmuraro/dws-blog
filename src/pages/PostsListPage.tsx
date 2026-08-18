@@ -1,3 +1,4 @@
+import { Link, useSearchParams } from 'react-router-dom';
 import {
   FilterBar,
   FilterBarSkeleton,
@@ -18,6 +19,9 @@ import styles from './PostsListPage.module.scss';
 const SKELETON_COUNT = 6;
 
 const PostsListPage = () => {
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get('q') ?? '';
+
   const { data: posts, isLoading, error, retry } = usePosts();
   const {
     categoryOptions,
@@ -30,7 +34,7 @@ const PostsListPage = () => {
     sortOrder,
     toggleSortOrder,
     visiblePosts,
-  } = usePostFilters(posts);
+  } = usePostFilters(posts, searchTerm);
 
   const renderFilters = () => {
     if (isLoading) return <FilterBarSkeleton />;
@@ -85,7 +89,11 @@ const PostsListPage = () => {
     }
 
     if (visiblePosts.length === 0) {
-      return <EmptyState message="No posts found" />;
+      return (
+        <EmptyState
+          message={searchTerm ? `No posts found for “${searchTerm}”` : 'No posts found'}
+        />
+      );
     }
 
     return (
@@ -110,6 +118,14 @@ const PostsListPage = () => {
           <SortToggle order={sortOrder} onToggle={toggleSortOrder} />
         )}
       </div>
+      {searchTerm && (
+        <p className={styles.searchSummary}>
+          Results for <strong className={styles.searchTerm}>“{searchTerm}”</strong>
+          <Link className={styles.clearSearch} to="/">
+            Clear search
+          </Link>
+        </p>
+      )}
       <div className={styles.layout}>
         {renderSidebar()}
         <div className={styles.content}>{renderContent()}</div>

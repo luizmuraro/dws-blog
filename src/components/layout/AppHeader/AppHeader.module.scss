@@ -1,5 +1,4 @@
 @use '../../../styles/mixins' as m;
-@use '../../../styles/typography' as type;
 
 .header {
   padding-block: var(--space-16);
@@ -21,14 +20,6 @@
   }
 }
 
-.rowSearching {
-  display: none;
-
-  @include m.from(desktop) {
-    display: flex;
-  }
-}
-
 .logo {
   display: inline-flex;
   flex-shrink: 1;
@@ -39,114 +30,4 @@
 
 .logo svg {
   height: auto;
-}
-
-.searchTrigger,
-.searchSubmit {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-neutral-lightest);
-  cursor: pointer;
-  background-color: var(--color-primary-light);
-  border: 0;
-  border-radius: 50%;
-}
-
-.searchTrigger {
-  width: 2rem;
-  height: 2rem;
-
-  @include m.from(desktop) {
-    display: none;
-  }
-}
-
-.searchSubmit {
-  width: 2.5rem;
-  height: 2.5rem;
-}
-
-.mobileSearch,
-.desktopSearch {
-  display: flex;
-  align-items: center;
-  border-radius: var(--radius-pill);
-}
-
-.mobileSearch {
-  gap: var(--space-8);
-  min-height: 2.5rem;
-  padding-inline: var(--space-12);
-  background-color: var(--color-neutral-lightest);
-
-  @include m.from(desktop) {
-    display: none;
-  }
-}
-
-.mobileSearch:focus-within {
-  outline: 2px solid var(--color-accent1-medium);
-  outline-offset: 2px;
-}
-
-.desktopSearch {
-  display: none;
-
-  @include m.from(desktop) {
-    display: flex;
-    flex-shrink: 0;
-    width: 33.5rem;
-    max-width: 100%;
-    height: 3.5rem;
-    padding: var(--space-8) var(--space-8) var(--space-8) var(--space-16);
-    border: 1px solid var(--color-neutral-extra-light);
-    box-shadow: 0 3px 18.1px rgb(91 123 193 / 29%);
-  }
-}
-
-.desktopSearch:hover,
-.desktopSearch:focus-within {
-  border-color: var(--color-accent1-medium);
-}
-
-.input {
-  @include type.body-small;
-
-  flex: 1;
-  min-width: 0;
-  padding-inline: var(--space-8);
-  color: var(--color-neutral-extra-dark);
-  background-color: transparent;
-  border: 0;
-
-  @include m.from(desktop) {
-    padding-inline: 0 var(--space-8);
-  }
-}
-
-.input:focus {
-  outline: none;
-}
-
-.input::placeholder {
-  color: var(--color-neutral-dark);
-}
-
-.input::-webkit-search-cancel-button {
-  display: none;
-}
-
-.iconButton {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  color: var(--color-neutral-extra-dark);
-  cursor: pointer;
-  background-color: transparent;
-  border: 0;
 }

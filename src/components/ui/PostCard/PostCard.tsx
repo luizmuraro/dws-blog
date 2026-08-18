@@ -4,7 +4,8 @@ import { useLineCount } from '@/hooks';
 import type { Post } from '@/types/domain';
 import { formatPostDate } from '@/utils/date';
 import { getLastName } from '@/utils/text';
-import CategoryTag from '../CategoryTag/CategoryTag';
+import CategoryTagList from '../CategoryTagList/CategoryTagList';
+import PostMeta from '../PostMeta/PostMeta';
 import styles from './PostCard.module.scss';
 
 interface PostCardProps {
@@ -21,11 +22,7 @@ const PostCard = ({ post }: PostCardProps) => {
     <article className={styles.card}>
       <img className={styles.thumbnail} src={post.thumbnailUrl} alt={post.title} loading="lazy" />
       <div className={styles.content}>
-        <div className={styles.meta}>
-          <span>{formatPostDate(post.publishedAt)}</span>
-          <div className={styles.separator} aria-hidden="true" />
-          <span>{getLastName(post.author.name)}</span>
-        </div>
+        <PostMeta items={[formatPostDate(post.publishedAt), getLastName(post.author.name)]} />
         <div className={styles.summary}>
           <h3 className={styles.title} ref={titleRef}>
             <Link className={styles.link} to={`/posts/${post.id}`}>
@@ -41,15 +38,7 @@ const PostCard = ({ post }: PostCardProps) => {
             </p>
           )}
         </div>
-        {post.categories.length > 0 && (
-          <ul className={styles.categories}>
-            {post.categories.map((category) => (
-              <li key={category.id}>
-                <CategoryTag name={category.name} />
-              </li>
-            ))}
-          </ul>
-        )}
+        <CategoryTagList categories={post.categories} />
       </div>
     </article>
   );

@@ -1,0 +1,19 @@
+@use '../../../styles/typography' as type;
+
+.meta {
+  @include type.caption;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  align-items: center;
+  color: var(--color-neutral-extra-dark);
+}
+
+.separator {
+  flex-shrink: 0;
+  width: 0.3125rem;
+  height: 0.3125rem;
+  background-color: var(--color-secondary-medium);
+  border-radius: 0.625rem;
+}

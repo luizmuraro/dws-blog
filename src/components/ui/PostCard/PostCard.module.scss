@@ -27,15 +27,6 @@
   padding: var(--space-16);
 }
 
-.meta {
-  @include type.caption;
-
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
-  color: var(--color-neutral-extra-dark);
-}
-
 .title {
   @include type.h3;
   @include m.line-clamp(2);
@@ -71,13 +62,6 @@
   outline-offset: 4px;
 }
 
-.separator {
-  background-color: var(--color-secondary-medium);
-  width: 0.3125rem;
-  height: 0.3125rem;
-  border-radius: 0.625rem;
-}
-
 .summary {
   display: flex;
   flex-direction: column;
@@ -89,12 +73,4 @@
   @include m.line-clamp(var(--lead-lines, 2));
 
   color: var(--color-neutral-extra-dark);
-}
-
-.categories {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-12);
-  padding: 0;
-  list-style: none;
 }
