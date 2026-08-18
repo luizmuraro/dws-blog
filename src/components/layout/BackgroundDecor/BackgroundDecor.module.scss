@@ -1,0 +1,51 @@
+.decor {
+  --u: 1vw;
+
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.blob {
+  --fade: rgb(240 240 242 / 0%);
+
+  position: absolute;
+  width: var(--size);
+  aspect-ratio: 1;
+}
+
+.teal {
+  --size: calc(121.5 * var(--u));
+
+  top: calc(23.6 * var(--u));
+  left: calc(-51.25 * var(--u));
+  background: radial-gradient(50% 50% at 50% 50%, var(--color-accent1-light) 0%, var(--fade) 100%);
+  filter: blur(50px);
+  opacity: 0.3;
+}
+
+.pink {
+  --size: calc(89.9 * var(--u));
+
+  top: calc(-11 * var(--u));
+  left: calc(33.4 * var(--u));
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    var(--color-secondary-light) 0%,
+    var(--fade) 100%
+  );
+  filter: blur(50px);
+  opacity: 0.18;
+}
+
+.blue {
+  --size: calc(112.8 * var(--u));
+
+  bottom: calc(-8 * var(--u));
+  left: calc(20.1 * var(--u));
+  background: radial-gradient(50% 50% at 50% 50%, #3559aa 17.5%, var(--fade) 100%);
+  filter: blur(68.1px);
+  opacity: 0.4;
+}

@@ -17,11 +17,12 @@
 
 .heading {
   @include type.h2;
+  @include m.visually-hidden;
 
   color: var(--color-primary-dark);
 
-  @include m.until(desktop) {
-    @include m.visually-hidden;
+  @include m.from(desktop) {
+    @include m.visually-shown;
   }
 }
 

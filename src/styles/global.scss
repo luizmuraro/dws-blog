@@ -21,3 +21,10 @@ body {
 .visually-hidden {
   @include mixins.visually-hidden;
 }
+
+/* Containing block for the decorative background layer, which spans the whole
+   document rather than the viewport. */
+#root {
+  position: relative;
+  min-height: 100vh;
+}
