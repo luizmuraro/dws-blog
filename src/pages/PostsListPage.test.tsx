@@ -38,6 +38,8 @@ const settled = () => waitFor(() => expect(screen.queryByText('Loading posts…'
 
 const filterBar = () => within(screen.getByRole('group', { name: 'Filters' }));
 
+const scopeTabs = () => within(screen.getByRole('group', { name: 'Post scope' }));
+
 afterEach(() => {
   vi.unstubAllGlobals();
 });
@@ -58,6 +60,7 @@ describe('PostsListPage loading', () => {
     renderPage();
 
     expect(screen.queryByRole('group', { name: 'Filters' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Post scope' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Newest first/ })).not.toBeInTheDocument();
   });
 });
@@ -79,6 +82,7 @@ describe('PostsListPage listing', () => {
     await settled();
 
     expect(screen.getByRole('group', { name: 'Filters' })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: 'Post scope' })).toBeInTheDocument();
     expect(screen.getByRole('complementary', { name: 'Filters' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Newest first/ })).toBeInTheDocument();
   });
@@ -101,6 +105,7 @@ describe('PostsListPage listing', () => {
     await settled();
 
     expect(screen.queryByRole('group', { name: 'Filters' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('group', { name: 'Post scope' })).not.toBeInTheDocument();
     expect(screen.queryByRole('complementary', { name: 'Filters' })).not.toBeInTheDocument();
   });
 });
@@ -173,15 +178,37 @@ describe('PostsListPage category param', () => {
 });
 
 describe('PostsListPage favorites', () => {
-  it('keeps only the favorited posts while the toggle is on', async () => {
+  it('keeps only the favorited posts while the favorites tab is on', async () => {
     stubFetchJson(listing);
 
     const { user } = renderPage({ preloadedState: { favorites: { ids: ['post-1'] } } });
     await settled();
 
-    await user.click(filterBar().getByRole('button', { name: /Favorites/ }));
+    await user.click(scopeTabs().getByRole('button', { name: /Favorites/ }));
 
     expect(cardTitles()).toEqual(['Understanding React hooks']);
+  });
+
+  it('brings every post back through the all posts tab', async () => {
+    stubFetchJson(listing);
+
+    const { user } = renderPage({ preloadedState: { favorites: { ids: ['post-1'] } } });
+    await settled();
+
+    await user.click(scopeTabs().getByRole('button', { name: /Favorites/ }));
+    await user.click(scopeTabs().getByRole('button', { name: /All posts/ }));
+
+    expect(cardTitles()).toEqual(['Design systems at scale', 'Understanding React hooks']);
+  });
+
+  it('counts every post and every favorite on the tabs', async () => {
+    stubFetchJson(listing);
+
+    renderPage({ preloadedState: { favorites: { ids: ['post-1'] } } });
+    await settled();
+
+    expect(scopeTabs().getByRole('button', { name: /All posts/ })).toHaveTextContent('2');
+    expect(scopeTabs().getByRole('button', { name: /Favorites/ })).toHaveTextContent('1');
   });
 
   it('is also reachable from the toolbar toggle beside the sort control', async () => {
@@ -203,7 +230,7 @@ describe('PostsListPage favorites', () => {
     const { user } = renderPage();
     await settled();
 
-    await user.click(filterBar().getByRole('button', { name: /Favorites/ }));
+    await user.click(scopeTabs().getByRole('button', { name: /Favorites/ }));
 
     expect(
       screen.getByText(
@@ -221,7 +248,7 @@ describe('PostsListPage favorites', () => {
     });
     await settled();
 
-    await user.click(filterBar().getByRole('button', { name: /Favorites/ }));
+    await user.click(scopeTabs().getByRole('button', { name: /Favorites/ }));
 
     expect(screen.getByText('No favorites match the current filters.')).toBeInTheDocument();
   });

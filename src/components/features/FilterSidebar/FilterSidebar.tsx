@@ -6,7 +6,7 @@ import type { FilterOption } from '@/types/ui';
 import { toggleItem } from '@/utils/array';
 import styles from './FilterSidebar.module.scss';
 
-const VIEWPORT_FIT = { bottomGap: 32, minHeight: 320 };
+const VIEWPORT_FIT = { bottomGap: 16, minHeight: 320 };
 
 interface FilterGroupProps {
   label: string;

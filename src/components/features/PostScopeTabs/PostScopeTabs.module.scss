@@ -1,0 +1,80 @@
+@use '../../../styles/mixins' as m;
+@use '../../../styles/typography' as type;
+
+.tabs {
+  display: flex;
+  gap: var(--space-24);
+  align-items: center;
+
+  /* The strip takes over the header separator here, so it hugs the header and bleeds as wide. */
+  margin-block-start: calc(-1 * var(--space-16));
+  margin-inline: calc(-1 * var(--space-16));
+  padding-inline: var(--space-16);
+  border-bottom: 1px solid var(--color-neutral-extra-light);
+
+  @include m.from(tablet) {
+    margin-inline: calc(-1 * var(--space-32));
+    padding-inline: var(--space-32);
+  }
+
+  @include m.from(desktop) {
+    display: none;
+  }
+}
+
+.tab {
+  @include type.body-small;
+
+  position: relative;
+  display: inline-flex;
+  gap: var(--space-4);
+  align-items: baseline;
+  padding-block: var(--space-8);
+  color: var(--color-primary-dark);
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+}
+
+.active .label {
+  font-weight: 700;
+}
+
+.active::after {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 2px;
+  content: '';
+  background-color: var(--color-secondary-medium);
+}
+
+.icon {
+  flex-shrink: 0;
+  align-self: center;
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--color-secondary-medium);
+}
+
+.count {
+  @include type.caption;
+
+  color: var(--color-neutral-medium);
+}
+
+.skeletonTab {
+  @include m.skeleton;
+
+  height: 1.3125rem;
+  margin-block: var(--space-8);
+  border-radius: var(--radius-sm);
+}
+
+.skeletonTab:nth-child(1) {
+  width: 5.5rem;
+}
+
+.skeletonTab:nth-child(2) {
+  width: 5rem;
+}

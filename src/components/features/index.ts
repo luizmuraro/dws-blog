@@ -5,4 +5,6 @@ export { default as FilterSidebarSkeleton } from './FilterSidebar/FilterSidebarS
 export { default as LatestArticles } from './LatestArticles/LatestArticles';
 export { default as PostArticle } from './PostArticle/PostArticle';
 export { default as PostArticleSkeleton } from './PostArticle/PostArticleSkeleton';
+export { default as PostScopeTabs } from './PostScopeTabs/PostScopeTabs';
+export { default as PostScopeTabsSkeleton } from './PostScopeTabs/PostScopeTabsSkeleton';
 export { default as PostSearch } from './PostSearch/PostSearch';

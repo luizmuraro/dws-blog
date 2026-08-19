@@ -4,6 +4,8 @@ import {
   FilterBarSkeleton,
   FilterSidebar,
   FilterSidebarSkeleton,
+  PostScopeTabs,
+  PostScopeTabsSkeleton,
 } from '@/components/features';
 import {
   EmptyState,
@@ -52,11 +54,23 @@ const PostsListPage = () => {
         authors={authorOptions}
         selectedCategoryIds={selectedCategoryIds}
         selectedAuthorIds={selectedAuthorIds}
-        showFavoritesOnly={showFavoritesOnly}
-        favoritesCount={favoritesCount}
         onCategoryChange={setSelectedCategoryIds}
         onAuthorChange={setSelectedAuthorIds}
-        onFavoritesOnlyChange={setShowFavoritesOnly}
+      />
+    );
+  };
+
+  const renderScopeTabs = () => {
+    if (isLoading) return <PostScopeTabsSkeleton />;
+
+    if (!hasOptions) return null;
+
+    return (
+      <PostScopeTabs
+        allCount={posts?.length ?? 0}
+        favoritesCount={favoritesCount}
+        showFavoritesOnly={showFavoritesOnly}
+        onShowFavoritesOnlyChange={setShowFavoritesOnly}
       />
     );
   };
@@ -123,6 +137,7 @@ const PostsListPage = () => {
 
   return (
     <section className={styles.page}>
+      {renderScopeTabs()}
       <div className={styles.toolbar}>
         <h1 className={styles.heading}>DWS blog</h1>
         {renderFilters()}

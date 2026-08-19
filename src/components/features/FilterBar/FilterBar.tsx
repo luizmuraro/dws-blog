@@ -1,4 +1,4 @@
-import { FavoritesToggle, FilterDropdown } from '@/components/ui';
+import { FilterDropdown } from '@/components/ui';
 import type { FilterOption } from '@/types/ui';
 import styles from './FilterBar.module.scss';
 
@@ -7,11 +7,8 @@ interface FilterBarProps {
   authors: FilterOption[];
   selectedCategoryIds: string[];
   selectedAuthorIds: string[];
-  showFavoritesOnly: boolean;
-  favoritesCount: number;
   onCategoryChange: (selectedIds: string[]) => void;
   onAuthorChange: (selectedIds: string[]) => void;
-  onFavoritesOnlyChange: (showFavoritesOnly: boolean) => void;
 }
 
 const FilterBar = ({
@@ -19,11 +16,8 @@ const FilterBar = ({
   authors,
   selectedCategoryIds,
   selectedAuthorIds,
-  showFavoritesOnly,
-  favoritesCount,
   onCategoryChange,
   onAuthorChange,
-  onFavoritesOnlyChange,
 }: FilterBarProps) => (
   <div className={styles.bar} role="group" aria-label="Filters">
     <FilterDropdown
@@ -37,11 +31,6 @@ const FilterBar = ({
       options={authors}
       selectedIds={selectedAuthorIds}
       onChange={onAuthorChange}
-    />
-    <FavoritesToggle
-      active={showFavoritesOnly}
-      count={favoritesCount}
-      onToggle={() => onFavoritesOnlyChange(!showFavoritesOnly)}
     />
   </div>
 );

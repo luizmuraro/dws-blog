@@ -21,11 +21,8 @@ const meta = {
     authors,
     selectedCategoryIds: [],
     selectedAuthorIds: [],
-    showFavoritesOnly: false,
-    favoritesCount: 0,
     onCategoryChange: () => {},
     onAuthorChange: () => {},
-    onFavoritesOnlyChange: () => {},
   },
   globals: { viewport: { value: 'ipad' } },
   parameters: {
@@ -47,10 +44,6 @@ export const Default: Story = {};
 
 export const WithSelection: Story = {
   args: { selectedCategoryIds: ['Design'], selectedAuthorIds: ['author-2'] },
-};
-
-export const FavoritesActive: Story = {
-  args: { showFavoritesOnly: true, favoritesCount: 4 },
 };
 
 export const Loading: StoryObj<typeof FilterBarSkeleton> = {

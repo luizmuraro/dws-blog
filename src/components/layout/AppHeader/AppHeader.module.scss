@@ -5,6 +5,15 @@
   border-bottom: 1px solid var(--color-neutral-extra-light);
 }
 
+/* Below desktop the posts list sits its scope tabs on this line, so the tabs draw it instead. */
+.header:has(+ main [data-post-scope-tabs]) {
+  border-bottom-color: transparent;
+
+  @include m.from(desktop) {
+    border-bottom-color: var(--color-neutral-extra-light);
+  }
+}
+
 .inner {
   @include m.page-shell;
 }

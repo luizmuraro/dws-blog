@@ -18,7 +18,6 @@ const authors: FilterOption[] = [
 const renderBar = (props: Partial<Parameters<typeof FilterBar>[0]> = {}) => {
   const onCategoryChange = vi.fn();
   const onAuthorChange = vi.fn();
-  const onFavoritesOnlyChange = vi.fn();
   const user = userEvent.setup();
 
   render(
@@ -27,16 +26,13 @@ const renderBar = (props: Partial<Parameters<typeof FilterBar>[0]> = {}) => {
       authors={authors}
       selectedCategoryIds={[]}
       selectedAuthorIds={[]}
-      showFavoritesOnly={false}
-      favoritesCount={0}
       onCategoryChange={onCategoryChange}
       onAuthorChange={onAuthorChange}
-      onFavoritesOnlyChange={onFavoritesOnlyChange}
       {...props}
     />,
   );
 
-  return { onCategoryChange, onAuthorChange, onFavoritesOnlyChange, user };
+  return { onCategoryChange, onAuthorChange, user };
 };
 
 describe('FilterBar', () => {
@@ -46,12 +42,17 @@ describe('FilterBar', () => {
     expect(screen.getByRole('group', { name: 'Filters' })).toBeInTheDocument();
   });
 
-  it('renders a dropdown per dimension plus the favorites toggle', () => {
+  it('renders a dropdown per dimension', () => {
     renderBar();
 
     expect(screen.getByRole('button', { name: 'Category' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Author' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Favorites/ })).toBeInTheDocument();
+  });
+
+  it('leaves the favorites scope to the tabs above it', () => {
+    renderBar();
+
+    expect(screen.queryByRole('button', { name: /Favorites/ })).not.toBeInTheDocument();
   });
 
   it('reports a category selection', async () => {
@@ -85,28 +86,6 @@ describe('FilterBar', () => {
 
     expect(screen.getByRole('button', { name: 'Design' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Lovelace' })).toBeInTheDocument();
-  });
-
-  it('turns the favorites filter on', async () => {
-    const { user, onFavoritesOnlyChange } = renderBar({ favoritesCount: 2 });
-
-    await user.click(screen.getByRole('button', { name: /Favorites/ }));
-
-    expect(onFavoritesOnlyChange).toHaveBeenCalledWith(true);
-  });
-
-  it('turns the favorites filter back off', async () => {
-    const { user, onFavoritesOnlyChange } = renderBar({ showFavoritesOnly: true });
-
-    await user.click(screen.getByRole('button', { name: /Favorites/ }));
-
-    expect(onFavoritesOnlyChange).toHaveBeenCalledWith(false);
-  });
-
-  it('shows the favorites count', () => {
-    renderBar({ favoritesCount: 7 });
-
-    expect(screen.getByRole('button', { name: /Favorites/ })).toHaveTextContent('7');
   });
 });
 
