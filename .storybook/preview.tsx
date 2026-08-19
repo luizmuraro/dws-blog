@@ -25,8 +25,9 @@ const preview: Preview = {
     layout: 'centered',
     backgrounds: {
       options: {
-        app: { name: 'App', value: '#060725' },
-        light: { name: 'Light', value: '#f0f0f2' },
+        app: { name: 'App', value: '#f0f0f2' },
+        surface: { name: 'Surface', value: '#ffffff' },
+        primary: { name: 'Primary', value: '#060725' },
       },
     },
     controls: {
