@@ -1,4 +1,9 @@
-import { configureStore, createListenerMiddleware, isAnyOf } from '@reduxjs/toolkit';
+import {
+  combineReducers,
+  configureStore,
+  createListenerMiddleware,
+  isAnyOf,
+} from '@reduxjs/toolkit';
 import { StorageKey, readStringArray, writeStringArray } from '@/utils/storage';
 import favoritesReducer, {
   clearFavorites,
@@ -12,37 +17,53 @@ import searchReducer, {
   selectRecentSearches,
 } from './searchSlice';
 
-const persistenceMiddleware = createListenerMiddleware();
-
-persistenceMiddleware.startListening({
-  matcher: isAnyOf(toggleFavorite, clearFavorites),
-  effect: (_action, listenerApi) => {
-    writeStringArray(StorageKey.Favorites, selectFavoriteIds(listenerApi.getState() as RootState));
-  },
+const rootReducer = combineReducers({
+  favorites: favoritesReducer,
+  search: searchReducer,
 });
 
-persistenceMiddleware.startListening({
-  matcher: isAnyOf(addRecentSearch, removeRecentSearch, clearRecentSearches),
-  effect: (_action, listenerApi) => {
-    writeStringArray(
-      StorageKey.RecentSearches,
-      selectRecentSearches(listenerApi.getState() as RootState),
-    );
-  },
+export type RootState = ReturnType<typeof rootReducer>;
+
+const createPersistenceMiddleware = () => {
+  const middleware = createListenerMiddleware();
+
+  middleware.startListening({
+    matcher: isAnyOf(toggleFavorite, clearFavorites),
+    effect: (_action, listenerApi) => {
+      writeStringArray(
+        StorageKey.Favorites,
+        selectFavoriteIds(listenerApi.getState() as RootState),
+      );
+    },
+  });
+
+  middleware.startListening({
+    matcher: isAnyOf(addRecentSearch, removeRecentSearch, clearRecentSearches),
+    effect: (_action, listenerApi) => {
+      writeStringArray(
+        StorageKey.RecentSearches,
+        selectRecentSearches(listenerApi.getState() as RootState),
+      );
+    },
+  });
+
+  return middleware;
+};
+
+const readPersistedState = (): RootState => ({
+  favorites: { ids: readStringArray(StorageKey.Favorites) },
+  search: { recentTerms: readStringArray(StorageKey.RecentSearches) },
 });
 
-export const store = configureStore({
-  reducer: {
-    favorites: favoritesReducer,
-    search: searchReducer,
-  },
-  preloadedState: {
-    favorites: { ids: readStringArray(StorageKey.Favorites) },
-    search: { recentTerms: readStringArray(StorageKey.RecentSearches) },
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().prepend(persistenceMiddleware.middleware),
-});
+export const createAppStore = (preloadedState: RootState = readPersistedState()) =>
+  configureStore({
+    reducer: rootReducer,
+    preloadedState,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().prepend(createPersistenceMiddleware().middleware),
+  });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type AppStore = ReturnType<typeof createAppStore>;
+export type AppDispatch = AppStore['dispatch'];
+
+export const store = createAppStore();
