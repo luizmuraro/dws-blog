@@ -5,6 +5,8 @@ export type { UseCategoriesResult } from './useCategories';
 export { useDebouncedValue } from './useDebouncedValue';
 export { useDropdown } from './useDropdown';
 export type { UseDropdownResult } from './useDropdown';
+export { useFavorite } from './useFavorite';
+export type { UseFavoriteResult } from './useFavorite';
 export { useLineCount } from './useLineCount';
 export type { UseLineCountResult } from './useLineCount';
 export { usePosts } from './usePosts';

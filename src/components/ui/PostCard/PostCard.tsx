@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { CSSProperties } from 'react';
-import { useLineCount } from '@/hooks';
+import { useFavorite, useLineCount } from '@/hooks';
 import type { Post } from '@/types/domain';
 import { formatPostDate } from '@/utils/date';
 import { getLastName } from '@/utils/text';
@@ -18,12 +18,13 @@ const SUMMARY_LINES = 4;
 const PostCard = ({ post }: PostCardProps) => {
   const [leadParagraph] = post.paragraphs;
   const { ref: titleRef, lineCount: titleLines } = useLineCount<HTMLHeadingElement>();
+  const { isFavorite, toggle } = useFavorite(post.id);
 
   return (
     <article className={styles.card}>
-      <img className={styles.thumbnail} src={post.thumbnailUrl} alt={post.title} loading="lazy" />
+      <img className={styles.thumbnail} src={post.thumbnailUrl} alt="" loading="lazy" />
       <div className={styles.favorite}>
-        <FavoriteButton postId={post.id} />
+        <FavoriteButton isFavorite={isFavorite} onToggle={toggle} />
       </div>
       <div className={styles.content}>
         <PostMeta items={[formatPostDate(post.publishedAt), getLastName(post.author.name)]} />

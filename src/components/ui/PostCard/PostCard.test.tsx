@@ -24,13 +24,14 @@ describe('PostCard', () => {
     );
   });
 
-  it('renders the thumbnail described by the title', () => {
-    renderWithProviders(<PostCard post={post} />);
+  it('keeps the thumbnail decorative so the title is not announced twice', () => {
+    const { container } = renderWithProviders(<PostCard post={post} />);
 
-    const thumbnail = screen.getByRole('img', { name: 'Understanding React hooks' });
+    const thumbnail = container.querySelector('img[alt=""]');
 
     expect(thumbnail).toHaveAttribute('src', 'https://example.test/cover.png');
     expect(thumbnail).toHaveAttribute('loading', 'lazy');
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
 
   it('shows the formatted date and the author last name', () => {

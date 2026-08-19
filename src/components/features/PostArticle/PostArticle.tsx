@@ -1,4 +1,5 @@
 import { FavoriteButton } from '@/components/ui';
+import { useFavorite } from '@/hooks';
 import { FavoriteButtonVariant } from '@/constants/favoriteButtonVariant';
 import type { Post } from '@/types/domain';
 import { formatPostDate } from '@/utils/date';
@@ -8,36 +9,44 @@ interface PostArticleProps {
   post: Post;
 }
 
-const PostArticle = ({ post }: PostArticleProps) => (
-  <article className={styles.article}>
-    <header className={styles.header}>
-      <h1 className={styles.title}>{post.title}</h1>
+const PostArticle = ({ post }: PostArticleProps) => {
+  const { isFavorite, toggle } = useFavorite(post.id);
 
-      <div className={styles.byline}>
-        <div className={styles.author}>
-          <img className={styles.avatar} src={post.author.profilePicture} alt="" />
-          <div className={styles.authorText}>
-            <p>
-              Written by: <span className={styles.authorName}>{post.author.name}</span>
-            </p>
-            <time className={styles.date} dateTime={post.publishedAt}>
-              {formatPostDate(post.publishedAt)}
-            </time>
+  return (
+    <article className={styles.article}>
+      <header className={styles.header}>
+        <h1 className={styles.title}>{post.title}</h1>
+
+        <div className={styles.byline}>
+          <div className={styles.author}>
+            <img className={styles.avatar} src={post.author.profilePicture} alt="" />
+            <div className={styles.authorText}>
+              <p>
+                Written by: <span className={styles.authorName}>{post.author.name}</span>
+              </p>
+              <time className={styles.date} dateTime={post.publishedAt}>
+                {formatPostDate(post.publishedAt)}
+              </time>
+            </div>
           </div>
+
+          <FavoriteButton
+            isFavorite={isFavorite}
+            onToggle={toggle}
+            variant={FavoriteButtonVariant.Inline}
+          />
         </div>
+      </header>
 
-        <FavoriteButton postId={post.id} variant={FavoriteButtonVariant.Inline} />
-      </div>
-    </header>
+      <img className={styles.cover} src={post.thumbnailUrl} alt="" />
 
-    <img className={styles.cover} src={post.thumbnailUrl} alt={post.title} />
-
-    {post.paragraphs.map((paragraph, index) => (
-      <p className={styles.paragraph} key={index}>
-        {paragraph}
-      </p>
-    ))}
-  </article>
-);
+      {post.paragraphs.map((paragraph, index) => (
+        <p className={styles.paragraph} key={index}>
+          {paragraph}
+        </p>
+      ))}
+    </article>
+  );
+};
 
 export default PostArticle;

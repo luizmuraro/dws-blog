@@ -5,12 +5,12 @@ import FavoriteButton from './FavoriteButton';
 const meta = {
   title: 'UI/FavoriteButton',
   component: FavoriteButton,
-  args: { postId: 'post-1' },
+  args: { isFavorite: false, onToggle: () => {} },
   parameters: {
     docs: {
       description: {
         component:
-          'Reads and writes the favorites slice, so pressing it in any story updates that story own store.',
+          'Renders from its props alone. The favorites slice is bound by useFavorite in whatever composes it.',
       },
     },
   },
@@ -23,7 +23,7 @@ type Story = StoryObj<typeof meta>;
 export const Overlay: Story = {};
 
 export const OverlayFavorited: Story = {
-  parameters: { preloadedState: { favorites: { ids: ['post-1'] }, search: { recentTerms: [] } } },
+  args: { isFavorite: true },
 };
 
 export const Inline: Story = {
@@ -31,6 +31,5 @@ export const Inline: Story = {
 };
 
 export const InlineFavorited: Story = {
-  args: { variant: FavoriteButtonVariant.Inline },
-  parameters: { preloadedState: { favorites: { ids: ['post-1'] }, search: { recentTerms: [] } } },
+  args: { variant: FavoriteButtonVariant.Inline, isFavorite: true },
 };

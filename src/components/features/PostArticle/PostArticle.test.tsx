@@ -38,17 +38,14 @@ describe('PostArticle', () => {
     expect(time).toHaveTextContent('Mar 5, 2024');
   });
 
-  it('treats the avatar as decorative and the cover as meaningful', () => {
+  it('treats both the avatar and the cover as decorative', () => {
     const { container } = renderWithProviders(<PostArticle post={post} />);
 
-    expect(screen.getByRole('img', { name: 'Understanding React hooks' })).toHaveAttribute(
-      'src',
-      'https://example.test/cover.png',
-    );
-    expect(container.querySelector('img[alt=""]')).toHaveAttribute(
-      'src',
-      'https://example.test/ada.png',
-    );
+    const [avatar, cover] = container.querySelectorAll('img[alt=""]');
+
+    expect(avatar).toHaveAttribute('src', 'https://example.test/ada.png');
+    expect(cover).toHaveAttribute('src', 'https://example.test/cover.png');
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
 
   it('renders every paragraph in order', () => {

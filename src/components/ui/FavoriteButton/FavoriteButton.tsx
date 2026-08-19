@@ -1,32 +1,30 @@
 import { StarIcon } from '@/components/icons';
 import { FavoriteButtonVariant } from '@/constants/favoriteButtonVariant';
-import { selectIsFavorite, toggleFavorite } from '@/store/favoritesSlice';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { cx } from '@/utils/classNames';
 import styles from './FavoriteButton.module.scss';
 
 interface FavoriteButtonProps {
-  postId: string;
+  isFavorite: boolean;
+  onToggle: () => void;
   variant?: FavoriteButtonVariant;
 }
 
 const FavoriteButton = ({
-  postId,
+  isFavorite,
+  onToggle,
   variant = FavoriteButtonVariant.Overlay,
 }: FavoriteButtonProps) => {
-  const isFavorite = useAppSelector(selectIsFavorite(postId));
-  const dispatch = useAppDispatch();
-
   const label = isFavorite ? 'Remove from favorites' : 'Add to favorites';
   const isInline = variant === FavoriteButtonVariant.Inline;
 
   return (
     <button
-      className={`${styles.button} ${styles[variant]} ${isFavorite ? styles.active : ''}`}
+      className={cx(styles.button, styles[variant], isFavorite && styles.active)}
       type="button"
       aria-pressed={isFavorite}
       aria-label={isInline ? undefined : label}
       title={isInline ? undefined : label}
-      onClick={() => dispatch(toggleFavorite(postId))}
+      onClick={onToggle}
     >
       <StarIcon filled={isFavorite} />
       {isInline && <span>{isFavorite ? 'Favorited' : 'Add to favorites'}</span>}

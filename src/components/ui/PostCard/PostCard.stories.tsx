@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { makeAuthor, makeCategory, makePost } from '@/test/factories';
 import PostCard from './PostCard';
-import PostCardSkeleton from '../PostCardSkeleton/PostCardSkeleton';
+import PostCardSkeleton from './PostCardSkeleton';
 
 const post = makePost({
   id: 'post-1',
