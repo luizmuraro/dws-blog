@@ -89,12 +89,16 @@
   flex: 1;
   min-width: 0;
   padding-inline: var(--space-8);
+
+  /* iOS Safari force-zooms the page when a focused field is under 16px. */
+  font-size: 1rem;
   color: var(--color-neutral-extra-dark);
   background-color: transparent;
   border: 0;
 
   @include m.from(desktop) {
     padding-inline: 0;
+    font-size: 0.875rem;
   }
 }
 
