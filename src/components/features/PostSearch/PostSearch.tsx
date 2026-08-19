@@ -1,9 +1,9 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useId, useRef } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
-import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon, CloseIcon, SearchIcon } from '@/components/icons';
 import { SearchVariant } from '@/constants/searchVariant';
-import { useCategories, useDropdown, usePostSearch } from '@/hooks';
+import { useCategories, useDropdown, useFocusOnOpen, usePostSearch, useSearchTerm } from '@/hooks';
 import { useAppDispatch } from '@/store/hooks';
 import { addRecentSearch } from '@/store/searchSlice';
 import { formatResultCount } from '@/utils/search';
@@ -14,14 +14,10 @@ import styles from './PostSearch.module.scss';
 const PostSearch = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
   const desktopPanelId = useId();
   const mobilePanelId = useId();
-  const committedTerm = searchParams.get('q') ?? '';
 
-  const [term, setTerm] = useState(committedTerm);
-  const [lastLocationKey, setLastLocationKey] = useState(location.key);
+  const { term, setTerm, committedTerm } = useSearchTerm();
 
   const {
     isOpen: isPanelOpen,
@@ -40,7 +36,7 @@ const PostSearch = () => {
   } = useDropdown();
 
   const mobileInputRef = useRef<HTMLInputElement>(null);
-  const wasMobileOpen = useRef(false);
+  useFocusOnOpen(isMobileOpen, mobileInputRef, mobileTriggerRef);
 
   const search = usePostSearch(term);
   const {
@@ -51,22 +47,6 @@ const PostSearch = () => {
   // A failed category list just hides the chips; the panel still works without them.
   const suggestedCategories = categoriesError ? [] : categories;
   const resultsPath = `/?${createSearchParams({ q: term.trim() })}`;
-
-  if (lastLocationKey !== location.key) {
-    setLastLocationKey(location.key);
-    setTerm(committedTerm);
-  }
-
-  useEffect(() => {
-    if (isMobileOpen) {
-      mobileInputRef.current?.focus();
-      mobileInputRef.current?.select();
-    } else if (wasMobileOpen.current) {
-      mobileTriggerRef.current?.focus();
-    }
-
-    wasMobileOpen.current = isMobileOpen;
-  }, [isMobileOpen, mobileTriggerRef]);
 
   const updateTerm = (event: ChangeEvent<HTMLInputElement>) => setTerm(event.target.value);
 
