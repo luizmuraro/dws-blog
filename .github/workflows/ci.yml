@@ -39,6 +39,13 @@ jobs:
       - name: Build Storybook
         run: npm run build-storybook
 
+      - name: Keep the Storybook build for the deploy job
+        uses: actions/upload-artifact@v7
+        with:
+          name: storybook-static
+          path: storybook-static
+          retention-days: 7
+
   deploy-preview:
     needs: verify
     if: github.event_name == 'pull_request'
@@ -86,3 +93,53 @@ jobs:
 
       - name: Deploy
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+  deploy-storybook:
+    needs: verify
+    runs-on: ubuntu-latest
+
+    env:
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_STORYBOOK_PROJECT_ID }}
+      IS_MAIN: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Download the Storybook build
+        uses: actions/download-artifact@v8
+        with:
+          name: storybook-static
+          path: storybook-static
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel environment
+        run: |
+          if [ "$IS_MAIN" = "true" ]; then
+            environment=production
+          else
+            environment=preview
+          fi
+          vercel pull --yes --environment="$environment" --token=${{ secrets.VERCEL_TOKEN }}
+
+      # The catalog is already built, so it ships through the Build Output API
+      # rather than being rebuilt by Vercel.
+      - name: Wrap the catalog as Vercel build output
+        run: |
+          mkdir -p .vercel/output/static
+          cp -r storybook-static/. .vercel/output/static/
+          echo '{"version":3}' > .vercel/output/config.json
+
+      - name: Deploy
+        run: |
+          if [ "$IS_MAIN" = "true" ]; then
+            prod=--prod
+          else
+            prod=
+          fi
+          url=$(vercel deploy --prebuilt $prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "### Storybook" >> "$GITHUB_STEP_SUMMARY"
+          echo "$url" >> "$GITHUB_STEP_SUMMARY"
