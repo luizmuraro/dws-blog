@@ -5,8 +5,8 @@ import { MemoryRouter } from 'react-router-dom';
 import '@fontsource/open-sans/400.css';
 import '@fontsource/open-sans/600.css';
 import '@fontsource/open-sans/700.css';
-import '../src/styles/global.scss';
-import { createAppStore } from '../src/store';
+import '@/styles/global.scss';
+import { createAppStore } from '@/store';
 
 const withStore: Decorator = (Story, context) => (
   <Provider store={createAppStore(context.parameters.preloadedState)}>

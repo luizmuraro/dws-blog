@@ -8,6 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '#storybook': fileURLToPath(new URL('./.storybook', import.meta.url)),
     },
   },
 });

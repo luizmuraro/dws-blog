@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { withSearchFieldFrame } from '../../../../.storybook/decorators';
+import { withSearchFieldFrame } from '#storybook/decorators';
 import { SearchVariant } from '@/constants/searchVariant';
 import type { UsePostSearchResult } from '@/hooks';
 import { makePost } from '@/test/factories';
