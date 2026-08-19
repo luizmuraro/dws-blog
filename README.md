@@ -11,9 +11,9 @@ sorting, a post detail page, and favorites that survive a reload.
 
 ### Mobile
 
-| Listing                                                                                                 | Post detail                                                                                                 | Latest articles                                                                                                  |
-| ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| <img src="docs/screenshots/home-mobile.jpg" alt="Mobile listing with the filter chips above the cards"> | <img src="docs/screenshots/detail-top-mobile.jpg" alt="Mobile post detail with the back button and byline"> | <img src="docs/screenshots/detail-bottom-mobile.jpg" alt="Mobile latest articles section stacked in one column"> |
+| Listing                                                                                                                | Post detail                                                                                                 | Latest articles                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| <img src="docs/screenshots/home-mobile.jpg" alt="Mobile listing with the scope tabs and filter chips above the cards"> | <img src="docs/screenshots/detail-top-mobile.jpg" alt="Mobile post detail with the back button and byline"> | <img src="docs/screenshots/detail-bottom-mobile.jpg" alt="Mobile latest articles section stacked in one column"> |
 
 ### Desktop
 
