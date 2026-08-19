@@ -15,10 +15,10 @@ const meta = {
   title: 'Features/SearchResultItem',
   component: SearchResultItem,
   args: { post, query: 'hooks', onSelect: () => {} },
-  parameters: { layout: 'padded', backgrounds: { value: 'surface' } },
+  parameters: { layout: 'padded' },
   decorators: [
     (Story) => (
-      <div style={{ width: 420 }}>
+      <div style={{ width: 'min(33.5rem, 100%)' }}>
         <Story />
       </div>
     ),
@@ -33,6 +33,33 @@ export const Default: Story = {};
 
 export const WithoutHighlight: Story = {
   args: { query: '' },
+};
+
+export const InAList: Story = {
+  render: (args) => (
+    <ul style={{ listStyle: 'none' }}>
+      {['Understanding React hooks', 'Hooks beyond state', 'Testing hooks in practice'].map(
+        (title, index) => (
+          <li key={title}>
+            <SearchResultItem
+              {...args}
+              post={makePost({
+                ...args.post,
+                id: `post-${index + 1}`,
+                title,
+                thumbnailUrl: `https://picsum.photos/seed/dws-row-${index}/160/160`,
+              })}
+            />
+          </li>
+        ),
+      )}
+    </ul>
+  ),
+  parameters: {
+    docs: {
+      description: { story: 'How the row reads stacked, which is how the panel always shows it.' },
+    },
+  },
 };
 
 export const ManyCategories: Story = {

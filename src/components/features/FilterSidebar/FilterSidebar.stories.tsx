@@ -25,12 +25,19 @@ const meta = {
     onCategoryChange: () => {},
     onAuthorChange: () => {},
   },
+  decorators: [
+    (Story) => (
+      <div style={{ width: '20rem' }}>
+        <Story />
+      </div>
+    ),
+  ],
   parameters: {
     layout: 'padded',
     docs: {
       description: {
         component:
-          'Selections are staged locally: pressing an option only updates the draft, Apply commits it, and Clear resets both dimensions immediately.',
+          'Desktop only, and constrained here to the column width it occupies on the listing page. Selections are staged locally: pressing an option only updates the draft, Apply commits it, and Clear resets both dimensions immediately.',
       },
     },
   },

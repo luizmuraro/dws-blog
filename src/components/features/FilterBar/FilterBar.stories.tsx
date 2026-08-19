@@ -27,7 +27,16 @@ const meta = {
     onAuthorChange: () => {},
     onFavoritesOnlyChange: () => {},
   },
-  parameters: { layout: 'padded' },
+  globals: { viewport: { value: 'ipad' } },
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        component:
+          'Mobile and tablet only: from 1024px up the bar is hidden and FilterSidebar takes over, so these stories render at a tablet viewport.',
+      },
+    },
+  },
 } satisfies Meta<typeof FilterBar>;
 
 export default meta;

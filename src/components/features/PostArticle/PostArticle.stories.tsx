@@ -24,6 +24,13 @@ const meta = {
   title: 'Features/PostArticle',
   component: PostArticle,
   args: { post },
+  decorators: [
+    (Story) => (
+      <div style={{ width: 'min(55rem, 100%)' }}>
+        <Story />
+      </div>
+    ),
+  ],
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof PostArticle>;
 

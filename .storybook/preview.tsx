@@ -1,4 +1,5 @@
 import type { Decorator, Preview } from '@storybook/react-vite';
+import { INITIAL_VIEWPORTS } from 'storybook/viewport';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import '@fontsource/open-sans/400.css';
@@ -23,6 +24,7 @@ const preview: Preview = {
   decorators: [withStore, withRouter],
   parameters: {
     layout: 'centered',
+    viewport: { options: INITIAL_VIEWPORTS },
     backgrounds: {
       options: {
         app: { name: 'App', value: '#f0f0f2' },
