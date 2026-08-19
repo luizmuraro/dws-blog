@@ -58,12 +58,22 @@ describe('usePost', () => {
     expect(fetchMock).toHaveBeenCalledOnce();
   });
 
-  it('exposes a missing post as an error', async () => {
+  it('settles on a null post when it does not exist', async () => {
     stubFetchError(404);
 
     const { result } = renderHook(() => usePost('missing'));
 
-    await waitFor(() => expect(result.current.error).toMatchObject({ status: 404 }));
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(result.current.data).toBeNull();
+    expect(result.current.error).toBeNull();
+  });
+
+  it('exposes any other failure as an error', async () => {
+    stubFetchError(500);
+
+    const { result } = renderHook(() => usePost('post-1'));
+
+    await waitFor(() => expect(result.current.error).toMatchObject({ status: 500 }));
     expect(result.current.data).toBeNull();
   });
 });

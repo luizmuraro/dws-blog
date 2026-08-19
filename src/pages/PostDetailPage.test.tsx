@@ -121,13 +121,23 @@ describe('PostDetailPage failure', () => {
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
   });
 
-  it('reports a missing post as an error rather than as an empty page', async () => {
+  it('says the post does not exist, without offering a pointless retry', async () => {
     stubFetchError(404);
 
     renderPage('missing');
     await settled();
 
-    expect(screen.getByRole('alert')).toHaveTextContent('We could not load this post.');
-    expect(screen.queryByText('Post not found')).toBeNull();
+    expect(screen.getByText('Post not found')).toBeInTheDocument();
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Try again' })).toBeNull();
+  });
+
+  it('hides the latest articles when the post does not exist', async () => {
+    stubFetchError(404);
+
+    renderPage('missing');
+    await settled();
+
+    expect(screen.queryByRole('region', { name: 'Latest articles' })).toBeNull();
   });
 });

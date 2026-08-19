@@ -1,6 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { makeApiPost } from '@/test/factories';
-import { getFetchInit, getFetchUrl, stubFetchError, stubFetchJson } from '@/test/mockFetch';
+import {
+  getFetchInit,
+  getFetchUrl,
+  stubFetchError,
+  stubFetchJson,
+  stubFetchReject,
+} from '@/test/mockFetch';
 import { ApiError } from './client';
 import { getPostById, getPosts } from './posts';
 
@@ -86,9 +92,22 @@ describe('getPostById', () => {
     expect(getFetchInit(fetchMock)?.signal).toBe(controller.signal);
   });
 
-  it('rejects with an ApiError when the post does not exist', async () => {
+  it('resolves to null when the post does not exist', async () => {
     stubFetchError(404);
 
-    await expect(getPostById('missing')).rejects.toMatchObject({ name: 'ApiError', status: 404 });
+    await expect(getPostById('missing')).resolves.toBeNull();
+  });
+
+  it('still rejects when the request fails for any other reason', async () => {
+    stubFetchError(500);
+
+    await expect(getPostById('post-1')).rejects.toMatchObject({ name: 'ApiError', status: 500 });
+  });
+
+  it('does not swallow a network failure', async () => {
+    const networkError = new TypeError('Failed to fetch');
+    stubFetchReject(networkError);
+
+    await expect(getPostById('post-1')).rejects.toBe(networkError);
   });
 });
