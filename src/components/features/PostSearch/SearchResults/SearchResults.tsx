@@ -5,7 +5,7 @@ import type { UsePostSearchResult } from '@/hooks';
 import { useAppDispatch } from '@/store/hooks';
 import { addRecentSearch } from '@/store/searchSlice';
 import { formatResultCount } from '@/utils/search';
-import SearchResultItem from './SearchResultItem';
+import SearchResultItem from '../SearchResultItem/SearchResultItem';
 import SearchResultsSkeleton from './SearchResultsSkeleton';
 import { cx } from '@/utils/classNames';
 import styles from './SearchResults.module.scss';

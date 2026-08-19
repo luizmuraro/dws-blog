@@ -1,6 +1,6 @@
-@use '../../../styles/mixins' as m;
-@use '../../../styles/typography' as type;
-@use '../../../styles/panel' as panel;
+@use '../../../../styles/mixins' as m;
+@use '../../../../styles/typography' as type;
+@use '../../../../styles/panel' as panel;
 
 .panel {
   @include panel.panel;

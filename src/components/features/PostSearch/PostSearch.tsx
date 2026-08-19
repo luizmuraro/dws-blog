@@ -7,8 +7,8 @@ import { useCategories, useDropdown, usePostSearch } from '@/hooks';
 import { useAppDispatch } from '@/store/hooks';
 import { addRecentSearch } from '@/store/searchSlice';
 import { formatResultCount } from '@/utils/search';
-import SearchResults from './SearchResults';
-import SearchSuggestions from './SearchSuggestions';
+import SearchResults from './SearchResults/SearchResults';
+import SearchSuggestions from './SearchSuggestions/SearchSuggestions';
 import styles from './PostSearch.module.scss';
 
 const PostSearch = () => {
