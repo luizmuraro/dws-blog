@@ -30,7 +30,6 @@
   display: flex;
   align-items: center;
 
-  /* The sort control sits on the baseline row of the visible heading. */
   @include m.from(desktop) {
     gap: var(--space-16);
     align-items: flex-end;

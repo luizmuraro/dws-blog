@@ -1,5 +1,11 @@
 # DWS Blog
 
+<p>
+  <a href="README.md"><img src="https://flagcdn.com/64x48/us.png" width="32" height="24" alt="English" title="English"></a>
+  &nbsp;
+  <a href="README.pt-BR.md"><img src="https://flagcdn.com/64x48/br.png" width="32" height="24" alt="Português (Brasil)" title="Português (Brasil)"></a>
+</p>
+
 A blog front end built for the DWS technical test: a post listing with search, filtering and
 sorting, a post detail page, and favorites that survive a reload.
 
@@ -67,15 +73,57 @@ The default is baked into the API client, so the app also runs without a `.env`.
 | `npm run lint`            | ESLint over the whole project                        |
 | `npm run format`          | Prettier write; `format:check` to verify only        |
 
+## API
+
+| Endpoint      | Used for                                                              |
+| ------------- | --------------------------------------------------------------------- |
+| `/posts`      | The listing, the search index and "Latest articles"                   |
+| `/posts/{id}` | The detail page — a 404 resolves to `null`, every other status throws |
+| `/categories` | The category chips the search panel offers before a query exists      |
+| `/authors`    | Implemented in the API layer, not consumed by a screen (see below)    |
+
+Responses are mapped into domain shapes at the edge (`src/api/mappers.ts`), so no component reads an
+API payload directly.
+
+## Beyond the brief
+
+The test asks for two views, some form of state management for user interactions, and offers unit
+tests as a bonus. These were added on top of that scope:
+
+**Favorites.** A star on every card and on the article, a favorites-only filter carrying its count,
+and a "Favorites" tab on mobile. The list is written from the listing and from the detail route and
+survives a reload through `localStorage`. This is the interaction the store exists for.
+
+**A search that remembers.** Beyond matching, the panel opens before anything is typed with the last
+five searches and the full category list, so an empty field still offers somewhere to go. Recent
+terms persist across sessions, a repeated term moves back to the top instead of piling up, and the
+matched fragments are highlighted in the results.
+
+**Shareable state.** The search term and a category chip commit to the URL (`?q=`, `?category=`), so
+a filtered listing can be linked and the back button behaves.
+
+**Every state of the screen, not just the happy one.** Per-component loading skeletons, an error
+state with retry, empty states worded for what emptied the list (no results, no favorites yet,
+favorites filtered out), a "Post not found" kept separate from a failed request, a 404 route and a
+router error boundary.
+
+**Accessibility.** Landmarks and headings over generic containers, accessible names on every icon
+button, `aria-busy` and a live region while results load, focus and keyboard handling on the
+dropdowns and the search panel, and `prefers-reduced-motion` honoured by the skeletons. Tests assert
+through roles and accessible names, and the `a11y` addon runs axe against every story.
+
+**Tooling.** Storybook as a published catalog, a CI pipeline running lint, formatting, coverage
+thresholds and both builds, and a preview deploy per pull request.
+
 ## Testing
 
-433 tests across 54 files, covering the utilities, the API layer, the store, every hook, every
+444 tests across 55 files, covering the utilities, the API layer, the store, every hook, every
 component and both pages.
 
 | Metric     | Coverage |
 | ---------- | -------- |
-| Statements | 99.4%    |
-| Branches   | 97.61%   |
+| Statements | 99.41%   |
+| Branches   | 97.38%   |
 | Functions  | 100%     |
 | Lines      | 100%     |
 
@@ -99,10 +147,10 @@ Assertions go through roles and accessible names rather than CSS module classes,
 The published catalog lives at https://dws-blog-storybook.vercel.app, redeployed from CI on every
 push to `main`.
 
-`npm run storybook` opens a catalog of 75 stories across 21 files. Global decorators supply a
+`npm run storybook` opens a catalog of 80 stories across 22 files. Global decorators supply a
 per-story Redux store and a memory router, so store-connected components work without per-story
-setup; `parameters.preloadedState` and `parameters.route` seed either one. The `a11y` addon runs
-axe against every story.
+setup; `parameters.preloadedState` and `parameters.route` seed either one. The `a11y` addon runs axe
+against every story.
 
 The canvas defaults to the real page background (`--color-neutral-lightest`), with white and the
 brand blue available from the toolbar.
@@ -129,14 +177,17 @@ src/
 
 ## Architecture decisions
 
-**Filter options are derived from the posts, not from their own endpoints.** `/posts` already
-embeds the author and the categories, so the category and author filters are extracted from the
-loaded listing. That saves two requests and guarantees a filter never offers a value that would
-return nothing. `/authors` and `/categories` remain implemented in the API layer.
+**Filter options are derived from the posts, not from their own endpoints.** `/posts` already embeds
+the author and the categories, so the category and author filters are extracted from the loaded
+listing. That saves two requests and guarantees a filter never offers a value that would return
+nothing. `/authors` and `/categories` remain implemented in the API layer, and `/categories` is what
+fills the chips in the search panel: those are needed before anything has been typed, and deferring
+a whole `/posts` fetch to fill six chips is the more expensive trade.
 
 **Search matches in memory.** The API has no query parameter, so the listing is fetched once on the
 first query and every later keystroke is matched locally against the title, the author name and the
-category names. A 300 ms debounce sits between the typed term and the matched one — with the data
+category names. The request is deferred until the reader actually types, so the header adds no call
+to a page load. A 300 ms debounce sits between the typed term and the matched one — with the data
 already in memory, what it saves is a re-filter per keystroke rather than a request. Accents are
 folded when matching but not when highlighting, where folding would shift the segment offsets away
 from the original text.
@@ -147,8 +198,10 @@ open the filter bar and sidebar own the selection, and nothing rewrites the URL 
 
 **Favorites are global, filters are not.** Favorites are written from the listing and from the
 detail route, read from both plus the filter layer, and they outlive the page — that is what the
-store is for. Category, author and sort selections are consumed by one page and two of its direct
-children, so they stay local in `usePostFilters`.
+store is for. Recent searches are global for the same reason: written from the header, read back
+across routes and sessions. Category, author and sort selections are consumed by one page and two of
+its direct children, so they stay local in `usePostFilters`, where a slice would buy indirection and
+nothing else.
 
 **Persistence sits beside the reducer, not inside it.** Favorites and recent searches survive a
 reload through `localStorage`: hydration goes through `preloadedState`, writes go through a listener
@@ -158,20 +211,19 @@ rather than breaking the listing.
 
 **The desktop sidebar stages its selections, but clearing never does.** The sidebar carries an
 "Apply filters" button, so its selections are held in a local draft and committed on press. Clearing
-has nothing to assemble, so it drops the draft and commits an empty selection in one click.
+has nothing to assemble, so it drops the draft and commits an empty selection in one click. The
+mobile dropdowns have nothing to stage either and filter on every click; the draft resets whenever
+the applied selection changes elsewhere, so both controls stay in sync across a resize.
 
 **A missing post is an answer, not a failure.** `getPostById` turns a 404 into `null` and lets every
 other status throw. The detail page can then separate the two: an absent post gets "Post not found",
 while a network or server failure gets the error state and a retry button. Offering to retry a 404
 would be promising something that cannot work.
 
-**Complementary sections hide themselves.** "Latest articles" reuses `/posts`, drops the post being
-read and takes the three most recent; a failed or empty listing hides the section entirely rather
-than stacking an error on top of an article that loaded fine. The category chips in the search panel
-behave the same way.
-
-Design-level rationale — token conflicts between the design system and the mockups, spacing and
-ratio choices — is kept separately in `NOTES.md`.
+**Complementary sections hide themselves.** "Latest articles" has no endpoint of its own, so it
+reuses `/posts`, drops the post being read and takes the three most recent; a failed or empty
+listing hides the section entirely rather than stacking an error on top of an article that loaded
+fine. The category chips in the search panel behave the same way.
 
 ## Known limitations
 

@@ -25,7 +25,6 @@ type Action<T> =
   | { type: typeof AsyncActionType.Resolved; payload: T }
   | { type: typeof AsyncActionType.Rejected; payload: Error };
 
-// Every action returns a full state, so the previous one is never needed.
 const reducer = <T>(_state: State<T>, action: Action<T>): State<T> => {
   switch (action.type) {
     case AsyncActionType.Pending:
@@ -64,7 +63,6 @@ export const useAsync = <T>(
 
     fn(controller.signal)
       .then((data) => {
-        // An aborted call is a cancellation, not a failure: drop the result.
         if (controller.signal.aborted) return;
         dispatch({ type: AsyncActionType.Resolved, payload: data });
       })

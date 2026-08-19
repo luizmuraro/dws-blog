@@ -9,7 +9,6 @@ const PostDetailPage = () => {
   const { id = '' } = useParams();
   const { data: post, isLoading, error, retry } = usePost(id);
 
-  /* If the user click on some lateste article, the window will scroll to the top of the article*/
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, [id]);
