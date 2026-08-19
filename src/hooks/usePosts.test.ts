@@ -40,15 +40,31 @@ describe('usePosts', () => {
     expect(result.current.data).toBeNull();
   });
 
-  it('refetches when retry is invoked', async () => {
-    const fetchMock = stubFetchJson([]);
+  it('refetches when retry is invoked after a failure', async () => {
+    stubFetchError(500);
 
     const { result } = renderHook(() => usePosts());
 
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    await waitFor(() => expect(result.current.error).not.toBeNull());
 
+    const fetchMock = stubFetchJson([makeApiPost({ id: 'post-1' })]);
     act(() => result.current.retry());
 
-    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(result.current.data).not.toBeNull());
+    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(result.current.error).toBeNull();
+  });
+
+  it('serves a second consumer from the shared listing', async () => {
+    const fetchMock = stubFetchJson([makeApiPost({ id: 'post-1' })]);
+
+    const first = renderHook(() => usePosts());
+    await waitFor(() => expect(first.result.current.isLoading).toBe(false));
+
+    const second = renderHook(() => usePosts());
+    await waitFor(() => expect(second.result.current.isLoading).toBe(false));
+
+    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(second.result.current.data).toBe(first.result.current.data);
   });
 });

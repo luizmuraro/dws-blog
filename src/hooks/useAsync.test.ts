@@ -7,13 +7,13 @@ const resolveDone = () => Promise.resolve('done');
 
 describe('useAsync', () => {
   it('starts in the loading state', () => {
-    const { result } = renderHook(() => useAsync(resolveDone, []));
+    const { result } = renderHook(() => useAsync(resolveDone));
 
     expect(result.current).toMatchObject({ data: null, isLoading: true, error: null });
   });
 
   it('exposes the resolved value', async () => {
-    const { result } = renderHook(() => useAsync(resolveDone, []));
+    const { result } = renderHook(() => useAsync(resolveDone));
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(result.current).toMatchObject({ data: 'done', error: null });
@@ -22,7 +22,7 @@ describe('useAsync', () => {
   it('exposes a rejection as an error', async () => {
     const failure = new Error('boom');
     const reject = () => Promise.reject(failure);
-    const { result } = renderHook(() => useAsync(reject, []));
+    const { result } = renderHook(() => useAsync(reject));
 
     await waitFor(() => expect(result.current.error).toBe(failure));
     expect(result.current).toMatchObject({ data: null, isLoading: false });
@@ -30,7 +30,7 @@ describe('useAsync', () => {
 
   it('wraps a non-Error rejection', async () => {
     const reject = () => Promise.reject('offline');
-    const { result } = renderHook(() => useAsync(reject, []));
+    const { result } = renderHook(() => useAsync(reject));
 
     await waitFor(() => expect(result.current.error).toBeInstanceOf(Error));
     expect(result.current.error?.message).toBe('offline');
@@ -38,7 +38,7 @@ describe('useAsync', () => {
 
   it('passes an abort signal to the callback', async () => {
     const fn = vi.fn((signal: AbortSignal) => Promise.resolve(signal.aborted));
-    renderHook(() => useAsync(fn, []));
+    renderHook(() => useAsync(fn));
 
     await waitFor(() => expect(fn).toHaveBeenCalledOnce());
     expect(fn.mock.calls[0][0]).toBeInstanceOf(AbortSignal);
@@ -46,7 +46,7 @@ describe('useAsync', () => {
 
   it('aborts the in-flight call on unmount', () => {
     const fn = vi.fn<(signal: AbortSignal) => Promise<string>>(() => new Promise(() => {}));
-    const { unmount } = renderHook(() => useAsync(fn, []));
+    const { unmount } = renderHook(() => useAsync(fn));
     const signal = fn.mock.calls[0][0];
 
     expect(signal.aborted).toBe(false);
@@ -63,7 +63,7 @@ describe('useAsync', () => {
         }),
     );
 
-    const { result, unmount } = renderHook(() => useAsync(fn, []));
+    const { result, unmount } = renderHook(() => useAsync(fn));
     unmount();
 
     await act(async () => {
@@ -75,7 +75,7 @@ describe('useAsync', () => {
 
   it('re-runs the call when retry is invoked', async () => {
     const fn = vi.fn<(signal: AbortSignal) => Promise<string>>(() => Promise.resolve('done'));
-    const { result } = renderHook(() => useAsync(fn, []));
+    const { result } = renderHook(() => useAsync(fn));
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
@@ -94,7 +94,7 @@ describe('useAsync', () => {
       .mockRejectedValueOnce(new Error('boom'))
       .mockResolvedValueOnce('done');
 
-    const { result } = renderHook(() => useAsync(fn, []));
+    const { result } = renderHook(() => useAsync(fn));
 
     await waitFor(() => expect(result.current.error).not.toBeNull());
 
@@ -109,7 +109,7 @@ describe('useAsync', () => {
       ({ id }) => {
         const fetchById = useCallback(() => Promise.resolve(id), [id]);
 
-        return useAsync(fetchById, [id]);
+        return useAsync(fetchById);
       },
       { initialProps: { id: 'a' } },
     );
@@ -122,7 +122,7 @@ describe('useAsync', () => {
   });
 
   it('keeps a stable retry reference across renders', () => {
-    const { result, rerender } = renderHook(() => useAsync(resolveDone, []));
+    const { result, rerender } = renderHook(() => useAsync(resolveDone));
     const firstRetry = result.current.retry;
 
     rerender();

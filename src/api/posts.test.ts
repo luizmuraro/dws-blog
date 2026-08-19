@@ -8,7 +8,7 @@ import {
   stubFetchReject,
 } from '@/test/mockFetch';
 import { ApiError } from './client';
-import { getPostById, getPosts } from './posts';
+import { clearPostsCache, getPostById, getPosts } from './posts';
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -49,19 +49,41 @@ describe('getPosts', () => {
     await expect(getPosts()).resolves.toEqual([]);
   });
 
-  it('forwards the abort signal', async () => {
-    const fetchMock = stubFetchJson([]);
-    const controller = new AbortController();
-
-    await getPosts(controller.signal);
-
-    expect(getFetchInit(fetchMock)?.signal).toBe(controller.signal);
-  });
-
   it('rejects with an ApiError when the request fails', async () => {
     stubFetchError(500);
 
     await expect(getPosts()).rejects.toBeInstanceOf(ApiError);
+  });
+
+  it('fetches once and shares the listing with later callers', async () => {
+    const fetchMock = stubFetchJson([makeApiPost({ id: 'post-1' })]);
+
+    const [first, second] = await Promise.all([getPosts(), getPosts()]);
+
+    expect(fetchMock).toHaveBeenCalledOnce();
+    expect(first).toBe(second);
+    await expect(getPosts()).resolves.toBe(first);
+  });
+
+  it('does not cache a rejection, so a retry hits the api again', async () => {
+    stubFetchError(500);
+    await expect(getPosts()).rejects.toBeInstanceOf(ApiError);
+
+    const fetchMock = stubFetchJson([makeApiPost({ id: 'post-1' })]);
+
+    await expect(getPosts()).resolves.toHaveLength(1);
+    expect(fetchMock).toHaveBeenCalledOnce();
+  });
+
+  it('clearPostsCache forces the next call to refetch', async () => {
+    stubFetchJson([]);
+    await getPosts();
+
+    clearPostsCache();
+    const fetchMock = stubFetchJson([]);
+    await getPosts();
+
+    expect(fetchMock).toHaveBeenCalledOnce();
   });
 });
 

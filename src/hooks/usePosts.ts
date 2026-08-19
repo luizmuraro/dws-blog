@@ -5,7 +5,7 @@ import { useAsync } from './useAsync';
 import type { UseAsyncResult } from './useAsync';
 
 export const usePosts = (): UseAsyncResult<Post[]> => {
-  const fetchPosts = useCallback((signal: AbortSignal) => getPosts(signal), []);
+  const fetchPosts = useCallback(() => getPosts(), []);
 
-  return useAsync(fetchPosts, []);
+  return useAsync(fetchPosts);
 };

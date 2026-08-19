@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 import { afterEach } from 'vitest';
+import { clearPostsCache } from '@/api';
 
 class ResizeObserverStub implements ResizeObserver {
   observe(): void {}
@@ -12,4 +13,5 @@ window.scrollTo = () => {};
 
 afterEach(() => {
   window.localStorage.clear();
+  clearPostsCache();
 });
