@@ -1,4 +1,5 @@
 import { StarIcon } from '@/components/icons';
+import { cx } from '@/utils/classNames';
 import styles from './FavoritesToggle.module.scss';
 
 interface FavoritesToggleProps {
@@ -9,7 +10,7 @@ interface FavoritesToggleProps {
 
 const FavoritesToggle = ({ active, count, onToggle }: FavoritesToggleProps) => (
   <button
-    className={`${styles.toggle} ${active ? styles.active : ''}`}
+    className={cx(styles.toggle, active && styles.active)}
     type="button"
     aria-pressed={active}
     onClick={onToggle}

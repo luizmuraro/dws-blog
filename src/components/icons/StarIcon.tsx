@@ -1,9 +1,10 @@
-interface IconProps {
-  className?: string;
+import type { IconProps } from './types';
+
+interface StarIconProps extends IconProps {
   filled?: boolean;
 }
 
-const StarIcon = ({ className, filled = false }: IconProps) => (
+const StarIcon = ({ className, filled = false }: StarIconProps) => (
   <svg
     className={className}
     width="20"

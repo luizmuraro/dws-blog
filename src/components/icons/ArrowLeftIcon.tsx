@@ -1,6 +1,4 @@
-interface IconProps {
-  className?: string;
-}
+import type { IconProps } from './types';
 
 const ArrowLeftIcon = ({ className }: IconProps) => (
   <svg

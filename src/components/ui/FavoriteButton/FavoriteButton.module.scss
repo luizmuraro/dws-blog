@@ -24,7 +24,7 @@
   height: 2rem;
   padding: 0;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgb(91 123 193 / 29%);
+  box-shadow: var(--shadow-chip);
 }
 
 .inline {

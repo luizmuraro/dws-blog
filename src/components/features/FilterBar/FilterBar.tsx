@@ -1,15 +1,6 @@
 import { FilterDropdown } from '@/components/ui';
-import type { FilterOption } from '@/types/ui';
+import type { FilterSelection } from '@/types/ui';
 import styles from './FilterBar.module.scss';
-
-interface FilterBarProps {
-  categories: FilterOption[];
-  authors: FilterOption[];
-  selectedCategoryIds: string[];
-  selectedAuthorIds: string[];
-  onCategoryChange: (selectedIds: string[]) => void;
-  onAuthorChange: (selectedIds: string[]) => void;
-}
 
 const FilterBar = ({
   categories,
@@ -18,7 +9,7 @@ const FilterBar = ({
   selectedAuthorIds,
   onCategoryChange,
   onAuthorChange,
-}: FilterBarProps) => (
+}: FilterSelection) => (
   <div className={styles.bar} role="group" aria-label="Filters">
     <FilterDropdown
       label="Category"

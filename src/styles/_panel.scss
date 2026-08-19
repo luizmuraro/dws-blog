@@ -1,26 +1,34 @@
-@use '../../../styles/typography' as type;
+@use './typography' as type;
 
-@mixin panel {
+/// Chrome shared by every panel that floats under its trigger. Stacking and
+/// dimensions are left to the caller, which knows its own context.
+@mixin panel-base {
   position: absolute;
   top: calc(100% + var(--space-8));
-  right: 0;
-  left: 0;
-  z-index: 20;
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
   background-color: var(--color-neutral-lightest);
   border-radius: var(--radius-lg);
 }
 
+/// Stretches the panel across its containing block and clips the scroll area.
+@mixin panel {
+  @include panel-base;
+
+  right: 0;
+  left: 0;
+  z-index: 20;
+  min-height: 0;
+  overflow: hidden;
+}
+
 @mixin panel-desktop {
-  box-shadow: 0 4px 29.6px rgb(91 123 193 / 24%);
+  box-shadow: var(--shadow-panel);
 }
 
 @mixin panel-mobile {
   max-height: min(60svh, 32rem);
-  box-shadow: 0 4px 16px rgb(91 123 193 / 29%);
+  box-shadow: var(--shadow-card);
 }
 
 @mixin panel-header {

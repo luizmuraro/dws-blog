@@ -1,3 +1,4 @@
+@use '../../../styles/panel' as panel;
 @use '../../../styles/typography' as type;
 
 .dropdown {
@@ -65,20 +66,16 @@
 }
 
 .panel {
-  position: absolute;
-  top: calc(100% + var(--space-8));
+  @include panel.panel-base;
+
   left: 0;
   z-index: 10;
-  display: flex;
-  flex-direction: column;
   gap: var(--space-8);
   width: 19.625rem;
   max-width: calc(100vw - var(--space-32));
   padding: var(--space-16);
   list-style: none;
-  background-color: var(--color-neutral-lightest);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 4px 29.6px rgb(91 123 193 / 24%);
+  box-shadow: var(--shadow-panel);
 }
 
 .option {

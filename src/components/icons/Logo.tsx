@@ -1,8 +1,6 @@
-interface LogoProps {
-  className?: string;
-}
+import type { IconProps } from './types';
 
-const Logo = ({ className }: LogoProps) => (
+const Logo = ({ className }: IconProps) => (
   <svg
     className={className}
     width="205"

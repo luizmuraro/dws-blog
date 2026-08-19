@@ -1,4 +1,5 @@
 import { StarIcon } from '@/components/icons';
+import { cx } from '@/utils/classNames';
 import styles from './PostScopeTabs.module.scss';
 
 interface PostScopeTabsProps {
@@ -16,7 +17,7 @@ const PostScopeTabs = ({
 }: PostScopeTabsProps) => (
   <div className={styles.tabs} data-post-scope-tabs role="group" aria-label="Post scope">
     <button
-      className={`${styles.tab} ${showFavoritesOnly ? '' : styles.active}`}
+      className={cx(styles.tab, !showFavoritesOnly && styles.active)}
       type="button"
       aria-pressed={!showFavoritesOnly}
       onClick={() => onShowFavoritesOnlyChange(false)}
@@ -25,7 +26,7 @@ const PostScopeTabs = ({
       <span className={styles.count}>{allCount}</span>
     </button>
     <button
-      className={`${styles.tab} ${showFavoritesOnly ? styles.active : ''}`}
+      className={cx(styles.tab, showFavoritesOnly && styles.active)}
       type="button"
       aria-pressed={showFavoritesOnly}
       onClick={() => onShowFavoritesOnlyChange(true)}

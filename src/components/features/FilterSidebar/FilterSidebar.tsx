@@ -2,8 +2,9 @@ import { useId, useState } from 'react';
 import { FiltersIcon } from '@/components/icons';
 import { PillButton } from '@/components/ui';
 import { useViewportFit } from '@/hooks';
-import type { FilterOption } from '@/types/ui';
+import type { FilterOption, FilterSelection } from '@/types/ui';
 import { toggleItem } from '@/utils/array';
+import { cx } from '@/utils/classNames';
 import styles from './FilterSidebar.module.scss';
 
 const VIEWPORT_FIT = { bottomGap: 16, minHeight: 320 };
@@ -30,7 +31,7 @@ const FilterGroup = ({ label, options, selectedIds, onToggle }: FilterGroupProps
           return (
             <li key={option.id}>
               <button
-                className={`${styles.option} ${isSelected ? styles.optionSelected : ''}`}
+                className={cx(styles.option, isSelected && styles.optionSelected)}
                 type="button"
                 aria-pressed={isSelected}
                 onClick={() => onToggle(option.id)}
@@ -50,15 +51,6 @@ interface Selection {
   authorIds: string[];
 }
 
-interface FilterSidebarProps {
-  categories: FilterOption[];
-  authors: FilterOption[];
-  selectedCategoryIds: string[];
-  selectedAuthorIds: string[];
-  onCategoryChange: (selectedIds: string[]) => void;
-  onAuthorChange: (selectedIds: string[]) => void;
-}
-
 const FilterSidebar = ({
   categories,
   authors,
@@ -66,7 +58,7 @@ const FilterSidebar = ({
   selectedAuthorIds,
   onCategoryChange,
   onAuthorChange,
-}: FilterSidebarProps) => {
+}: FilterSelection) => {
   const { ref: sidebarRef, maxHeight } = useViewportFit<HTMLElement>(VIEWPORT_FIT);
   const applied: Selection = { categoryIds: selectedCategoryIds, authorIds: selectedAuthorIds };
   const [draft, setDraft] = useState<Selection>(applied);

@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+import { SortOrder } from '@/constants/sortOrder';
+import { sortPosts } from '@/utils/postFilters';
 import { PostCard, PostCardSkeleton } from '@/components/ui';
 import { usePosts } from '@/hooks';
 import styles from './LatestArticles.module.scss';
@@ -15,10 +17,9 @@ const LatestArticles = ({ currentPostId }: LatestArticlesProps) => {
   const latestPosts = useMemo(() => {
     if (!posts) return [];
 
-    return posts
-      .filter((post) => post.id !== currentPostId)
-      .toSorted((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))
-      .slice(0, LATEST_COUNT);
+    const others = posts.filter((post) => post.id !== currentPostId);
+
+    return sortPosts(others, SortOrder.Newest).slice(0, LATEST_COUNT);
   }, [posts, currentPostId]);
 
   if (error || (!isLoading && latestPosts.length === 0)) return null;

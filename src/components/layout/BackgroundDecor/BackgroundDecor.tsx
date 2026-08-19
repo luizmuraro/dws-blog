@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { cx } from '@/utils/classNames';
 import styles from './BackgroundDecor.module.scss';
 
 const SETTLE_DELAY_MS = 150;
@@ -26,10 +27,10 @@ const BackgroundDecor = () => {
   }, []);
 
   return (
-    <div className={`${styles.decor} ${isSettled ? styles.settled : ''}`} aria-hidden="true">
-      <span className={`${styles.blob} ${styles.teal}`} />
-      <span className={`${styles.blob} ${styles.pink}`} />
-      <span className={`${styles.blob} ${styles.blue}`} />
+    <div className={cx(styles.decor, isSettled && styles.settled)} aria-hidden="true">
+      <span className={cx(styles.blob, styles.teal)} />
+      <span className={cx(styles.blob, styles.pink)} />
+      <span className={cx(styles.blob, styles.blue)} />
     </div>
   );
 };

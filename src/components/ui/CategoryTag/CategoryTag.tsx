@@ -1,3 +1,4 @@
+import { cx } from '@/utils/classNames';
 import styles from './CategoryTag.module.scss';
 
 interface CategoryTagProps {
@@ -7,7 +8,7 @@ interface CategoryTagProps {
 
 const CategoryTag = ({ name, onClick }: CategoryTagProps) =>
   onClick ? (
-    <button className={`${styles.tag} ${styles.interactive}`} type="button" onClick={onClick}>
+    <button className={cx(styles.tag, styles.interactive)} type="button" onClick={onClick}>
       {name}
     </button>
   ) : (
