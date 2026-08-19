@@ -81,8 +81,11 @@ describe('useAsync', () => {
 
     act(() => result.current.retry());
 
-    await waitFor(() => expect(fn).toHaveBeenCalledTimes(2));
-    expect(result.current.data).toBe('done');
+    // Both assertions share one waitFor: the call lands a tick before the result does.
+    await waitFor(() => {
+      expect(fn).toHaveBeenCalledTimes(2);
+      expect(result.current.data).toBe('done');
+    });
   });
 
   it('recovers from an error when the retry succeeds', async () => {
