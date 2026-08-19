@@ -13,3 +13,5 @@ export { usePostFilters } from './usePostFilters';
 export type { UsePostFiltersResult } from './usePostFilters';
 export { usePostSearch, MIN_SEARCH_LENGTH, SEARCH_DEBOUNCE_MS } from './usePostSearch';
 export type { UsePostSearchResult } from './usePostSearch';
+export { useViewportFit } from './useViewportFit';
+export type { UseViewportFitOptions, UseViewportFitResult } from './useViewportFit';

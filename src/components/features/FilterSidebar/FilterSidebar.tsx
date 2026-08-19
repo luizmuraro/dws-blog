@@ -1,9 +1,12 @@
 import { useId, useState } from 'react';
 import { FiltersIcon } from '@/components/icons';
 import { PillButton } from '@/components/ui';
+import { useViewportFit } from '@/hooks';
 import type { FilterOption } from '@/types/ui';
 import { toggleItem } from '@/utils/array';
 import styles from './FilterSidebar.module.scss';
+
+const VIEWPORT_FIT = { bottomGap: 32, minHeight: 320 };
 
 interface FilterGroupProps {
   label: string;
@@ -64,6 +67,7 @@ const FilterSidebar = ({
   onCategoryChange,
   onAuthorChange,
 }: FilterSidebarProps) => {
+  const { ref: sidebarRef, maxHeight } = useViewportFit<HTMLElement>(VIEWPORT_FIT);
   const applied: Selection = { categoryIds: selectedCategoryIds, authorIds: selectedAuthorIds };
   const [draft, setDraft] = useState<Selection>(applied);
   const [lastApplied, setLastApplied] = useState<Selection>(applied);
@@ -93,14 +97,10 @@ const FilterSidebar = ({
     onAuthorChange([]);
   };
 
-  const hasFilters =
-    draft.categoryIds.length > 0 ||
-    draft.authorIds.length > 0 ||
-    applied.categoryIds.length > 0 ||
-    applied.authorIds.length > 0;
+  const hasAppliedFilters = applied.categoryIds.length > 0 || applied.authorIds.length > 0;
 
   return (
-    <aside className={styles.sidebar} aria-label="Filters">
+    <aside className={styles.sidebar} style={{ maxHeight }} ref={sidebarRef} aria-label="Filters">
       <div className={styles.header}>
         <h2 className={styles.title}>
           <span className={styles.titleIcon}>
@@ -108,31 +108,35 @@ const FilterSidebar = ({
           </span>
           Filters
         </h2>
-        {hasFilters && (
+        {hasAppliedFilters && (
           <button className={styles.clear} type="button" onClick={clearFilters}>
             Clear filters
           </button>
         )}
       </div>
 
-      {categories.length > 0 && (
-        <FilterGroup
-          label="Category"
-          options={categories}
-          selectedIds={draft.categoryIds}
-          onToggle={toggleCategory}
-        />
-      )}
-      {authors.length > 0 && (
-        <FilterGroup
-          label="Author"
-          options={authors}
-          selectedIds={draft.authorIds}
-          onToggle={toggleAuthor}
-        />
-      )}
+      <div className={styles.groups}>
+        {categories.length > 0 && (
+          <FilterGroup
+            label="Category"
+            options={categories}
+            selectedIds={draft.categoryIds}
+            onToggle={toggleCategory}
+          />
+        )}
+        {authors.length > 0 && (
+          <FilterGroup
+            label="Author"
+            options={authors}
+            selectedIds={draft.authorIds}
+            onToggle={toggleAuthor}
+          />
+        )}
+      </div>
 
-      <PillButton onClick={applyFilters}>Apply filters</PillButton>
+      <div className={styles.footer}>
+        <PillButton onClick={applyFilters}>Apply filters</PillButton>
+      </div>
     </aside>
   );
 };
