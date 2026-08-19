@@ -80,7 +80,6 @@ O padrão já está no cliente de API, então a aplicação também roda sem um 
 | `/posts`      | A listagem, o índice da busca e a seção "Últimos artigos"                      |
 | `/posts/{id}` | A página do post — um 404 vira `null`, qualquer outro status lança erro        |
 | `/categories` | Os chips de categoria que o painel de busca oferece antes de existir uma query |
-| `/authors`    | Implementado na camada de API, não consumido por nenhuma tela (veja abaixo)    |
 
 As respostas são convertidas para os tipos de domínio na borda (`src/api/mappers.ts`), então nenhum
 componente lê um payload da API diretamente.
@@ -117,12 +116,12 @@ thresholds de cobertura e os dois builds, e um deploy de preview por pull reques
 
 ## Testes
 
-444 testes em 55 arquivos, cobrindo os utilitários, a camada de API, a store, todos os hooks, todos
+458 testes em 58 arquivos, cobrindo os utilitários, a camada de API, a store, todos os hooks, todos
 os componentes e as duas páginas.
 
 | Métrica    | Cobertura |
 | ---------- | --------- |
-| Statements | 99,41%    |
+| Statements | 99,57%    |
 | Branches   | 97,38%    |
 | Functions  | 100%      |
 | Lines      | 100%      |
@@ -161,10 +160,10 @@ marca disponíveis na toolbar.
 src/
 ├── api/          Cliente de fetch, endpoints e mappers API→domínio
 ├── components/
-│   ├── features/ Componentes compostos, com conhecimento do domínio (busca, filtros, artigo)
+│   ├── features/ Componentes de uma única feature (busca, filtros, artigo, latest)
 │   ├── icons/    Componentes SVG
 │   ├── layout/   Layout raiz, header, decoração de fundo
-│   └── ui/       Blocos de construção apresentacionais
+│   └── ui/       Blocos compartilhados entre features (card, tags, estados)
 ├── constants/    Conjuntos fechados de opções (ordenação, variantes)
 ├── hooks/        Busca de dados, filtros, pesquisa e medição de DOM
 ├── pages/        Componentes de rota
@@ -180,9 +179,10 @@ src/
 **As opções de filtro vêm dos posts, não dos endpoints próprios.** `/posts` já traz o autor e as
 categorias embutidos, então os filtros de categoria e autor são extraídos da listagem carregada. Isso
 economiza duas requisições e garante que um filtro nunca ofereça um valor que retornaria vazio.
-`/authors` e `/categories` continuam implementados na camada de API, e é `/categories` que preenche
-os chips do painel de busca: eles são necessários antes de qualquer coisa ser digitada, e adiar um
-fetch inteiro de `/posts` para preencher seis chips é a troca mais cara.
+Portanto `/authors` nunca é chamado, e seu client foi removido em vez de ficar como superfície
+morta. `/categories` permanece, porque é ele que preenche os chips do painel de busca: eles são
+necessários antes de qualquer coisa ser digitada, e adiar um fetch inteiro de `/posts` para
+preencher seis chips é a troca mais cara.
 
 **A busca casa em memória.** A API não tem parâmetro de query, então a listagem é buscada uma vez na
 primeira consulta e cada tecla seguinte é comparada localmente com o título, o nome do autor e os
@@ -210,22 +210,25 @@ middleware. Os reducers seguem puros e o acesso ao storage fica fora do caminho 
 escritas são embrulhadas em `try/catch`, então navegação privada ou cota cheia degrada para uma lista
 que dura só a sessão, em vez de quebrar a listagem.
 
-**A sidebar do desktop acumula as seleções; limpar, nunca.** A sidebar tem um botão "Apply filters",
-então as seleções ficam em um rascunho local e são aplicadas ao pressionar. Limpar não tem nada a
-montar, então descarta o rascunho e aplica a seleção vazia em um clique. Os dropdowns do mobile
-também não têm o que acumular e filtram a cada clique; o rascunho é resetado sempre que a seleção
-aplicada muda em outro lugar, então os dois controles seguem sincronizados ao redimensionar.
-
-**Um post inexistente é uma resposta, não uma falha.** `getPostById` transforma um 404 em `null` e
-deixa qualquer outro status lançar erro. A página do post consegue então separar os dois casos: um
-post ausente recebe "Post não encontrado", enquanto uma falha de rede ou de servidor recebe o estado
-de erro com o botão de tentar de novo. Oferecer nova tentativa para um 404 seria prometer algo que
-não pode funcionar.
-
 **Seções complementares se escondem sozinhas.** "Últimos artigos" não tem endpoint próprio, então
 reaproveita `/posts`, remove o post que está sendo lido e pega os três mais recentes; uma listagem
 que falha ou vem vazia esconde a seção inteira, em vez de empilhar um erro sobre um artigo que
 carregou bem. Os chips de categoria do painel de busca se comportam do mesmo jeito.
+
+**A listagem de posts é buscada uma vez por sessão.** Três consumidores precisam da lista inteira —
+a página de posts, a busca do header e "Latest articles" — então `getPosts` memoiza sua promise na
+camada de API em vez de cada chamador buscar a própria cópia. A promise compartilhada é criada sem
+abort signal de propósito: um consumidor desmontando não pode cancelar a requisição que os outros
+estão esperando, e cada chamador já descarta o próprio resultado quando o seu signal aborta. Uma
+rejeição limpa o cache, para que o retry do estado de erro ainda alcance a rede. Uma biblioteca de
+data fetching faria isso e mais, mas para três endpoints a dependência não se paga.
+
+**`ui/` e `features/` se dividem por posse, não por acoplamento.** Um componente fica em
+`features/` quando pertence a exatamente uma feature, e em `ui/` quando mais de uma recorre a ele.
+`PostCard` fica em `ui/` porque tanto a listagem quanto "Latest articles" o renderizam; `FilterBar`
+e `PostScopeTabs` não recebem nada além de primitivos e ainda assim ficam em `features/`, porque só
+existem para a página de posts. Dividir por acesso à store espalharia UI de uso único dentro de
+`ui/` e arrastaria um único botão para o meio de features inteiras.
 
 ## Limitações conhecidas
 

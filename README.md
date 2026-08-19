@@ -80,7 +80,6 @@ The default is baked into the API client, so the app also runs without a `.env`.
 | `/posts`      | The listing, the search index and "Latest articles"                   |
 | `/posts/{id}` | The detail page — a 404 resolves to `null`, every other status throws |
 | `/categories` | The category chips the search panel offers before a query exists      |
-| `/authors`    | Implemented in the API layer, not consumed by a screen (see below)    |
 
 Responses are mapped into domain shapes at the edge (`src/api/mappers.ts`), so no component reads an
 API payload directly.
@@ -117,12 +116,12 @@ thresholds and both builds, and a preview deploy per pull request.
 
 ## Testing
 
-444 tests across 55 files, covering the utilities, the API layer, the store, every hook, every
+458 tests across 58 files, covering the utilities, the API layer, the store, every hook, every
 component and both pages.
 
 | Metric     | Coverage |
 | ---------- | -------- |
-| Statements | 99.41%   |
+| Statements | 99.57%   |
 | Branches   | 97.38%   |
 | Functions  | 100%     |
 | Lines      | 100%     |
@@ -161,10 +160,10 @@ brand blue available from the toolbar.
 src/
 ├── api/          Fetch client, endpoints and API→domain mappers
 ├── components/
-│   ├── features/ Composed, domain-aware components (search, filters, article)
+│   ├── features/ Components owned by one feature (search, filters, article, latest)
 │   ├── icons/    SVG components
 │   ├── layout/   Root layout, header, background decoration
-│   └── ui/       Presentational building blocks
+│   └── ui/       Building blocks shared across features (card, tags, states)
 ├── constants/    Closed option sets (sort order, variants)
 ├── hooks/        Data fetching, filtering, search and DOM measurement
 ├── pages/        Route components
@@ -180,9 +179,10 @@ src/
 **Filter options are derived from the posts, not from their own endpoints.** `/posts` already embeds
 the author and the categories, so the category and author filters are extracted from the loaded
 listing. That saves two requests and guarantees a filter never offers a value that would return
-nothing. `/authors` and `/categories` remain implemented in the API layer, and `/categories` is what
-fills the chips in the search panel: those are needed before anything has been typed, and deferring
-a whole `/posts` fetch to fill six chips is the more expensive trade.
+nothing. `/authors` is therefore never called, and its client was deleted rather than left as an
+unused surface. `/categories` stays, because it fills the chips in the search panel: those are
+needed before anything has been typed, and deferring a whole `/posts` fetch to fill six chips is
+the more expensive trade.
 
 **Search matches in memory.** The API has no query parameter, so the listing is fetched once on the
 first query and every later keystroke is matched locally against the title, the author name and the
@@ -209,21 +209,25 @@ middleware. The reducers stay pure and storage access stays out of the render pa
 are wrapped in `try/catch`, so private browsing or a full quota degrades to a session-only list
 rather than breaking the listing.
 
-**The desktop sidebar stages its selections, but clearing never does.** The sidebar carries an
-"Apply filters" button, so its selections are held in a local draft and committed on press. Clearing
-has nothing to assemble, so it drops the draft and commits an empty selection in one click. The
-mobile dropdowns have nothing to stage either and filter on every click; the draft resets whenever
-the applied selection changes elsewhere, so both controls stay in sync across a resize.
-
-**A missing post is an answer, not a failure.** `getPostById` turns a 404 into `null` and lets every
-other status throw. The detail page can then separate the two: an absent post gets "Post not found",
-while a network or server failure gets the error state and a retry button. Offering to retry a 404
-would be promising something that cannot work.
-
 **Complementary sections hide themselves.** "Latest articles" has no endpoint of its own, so it
 reuses `/posts`, drops the post being read and takes the three most recent; a failed or empty
 listing hides the section entirely rather than stacking an error on top of an article that loaded
 fine. The category chips in the search panel behave the same way.
+
+**The posts listing is fetched once per session.** Three consumers need the whole list — the posts
+page, the header search and "Latest articles" — so `getPosts` memoises its promise in the API layer
+instead of each caller fetching its own copy. The shared promise is created without an abort signal
+on purpose: one consumer unmounting must not cancel the request the others are waiting on, and each
+caller already drops its own result when its signal aborts. A rejection clears the cache so the
+error state's retry still reaches the network. A data-fetching library would do this and more, but
+for three endpoints the dependency does not pay for itself.
+
+**`ui/` and `features/` split on ownership, not on coupling.** A component lives in `features/`
+when it belongs to exactly one feature, and in `ui/` when more than one reaches for it. `PostCard`
+is in `ui/` because both the listing and "Latest articles" render it; `FilterBar` and
+`PostScopeTabs` take nothing but primitives and still sit in `features/`, because they exist only
+for the posts page. Splitting on store access instead would scatter one-off UI into `ui/` and drag
+a single button up next to whole features.
 
 ## Known limitations
 
