@@ -110,6 +110,10 @@
   color: var(--color-neutral-dark);
 }
 
+.input:focus::placeholder {
+  color: transparent;
+}
+
 .input::-webkit-search-cancel-button {
   display: none;
 }
