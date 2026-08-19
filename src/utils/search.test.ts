@@ -105,9 +105,25 @@ describe('splitByMatches', () => {
     ]);
   });
 
-  it('does not fold diacritics, so an accented word only matches when accented', () => {
-    expect(splitByMatches('José', 'jose')).toEqual([{ text: 'José', isMatch: false }]);
+  it('folds diacritics the same way searchPosts does', () => {
+    expect(splitByMatches('José', 'jose')).toEqual([{ text: 'José', isMatch: true }]);
     expect(splitByMatches('José', 'josé')).toEqual([{ text: 'José', isMatch: true }]);
+  });
+
+  it('slices the original text back out after an accent shortened the match', () => {
+    expect(splitByMatches('Olá José da Silva', 'jose')).toEqual([
+      { text: 'Olá ', isMatch: false },
+      { text: 'José', isMatch: true },
+      { text: ' da Silva', isMatch: false },
+    ]);
+  });
+
+  it('marks every accented occurrence', () => {
+    expect(splitByMatches('São, são', 'sao')).toEqual([
+      { text: 'São', isMatch: true },
+      { text: ', ', isMatch: false },
+      { text: 'são', isMatch: true },
+    ]);
   });
 });
 

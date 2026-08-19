@@ -11,6 +11,27 @@ const normalize = (value: string): string =>
     .replace(/\p{Diacritic}/gu, '')
     .toLowerCase();
 
+interface FoldedText {
+  value: string;
+  sourceIndices: number[];
+}
+
+const fold = (text: string): FoldedText => {
+  let value = '';
+  const sourceIndices: number[] = [];
+
+  for (let index = 0; index < text.length; index += 1) {
+    for (const char of normalize(text[index])) {
+      value += char;
+      sourceIndices.push(index);
+    }
+  }
+
+  sourceIndices.push(text.length);
+
+  return { value, sourceIndices };
+};
+
 const getSearchableFields = (post: Post): string[] => [
   post.title,
   post.author.name,
@@ -28,24 +49,26 @@ export const searchPosts = (posts: Post[], term: string): Post[] => {
 };
 
 export const splitByMatches = (text: string, term: string): TextSegment[] => {
-  const query = term.trim();
+  const needle = normalize(term.trim());
 
-  if (!query) return [{ text, isMatch: false }];
+  if (!needle) return [{ text, isMatch: false }];
 
-  const haystack = text.toLowerCase();
-  const needle = query.toLowerCase();
+  const { value: haystack, sourceIndices } = fold(text);
   const segments: TextSegment[] = [];
   let cursor = 0;
   let index = haystack.indexOf(needle);
 
   while (index !== -1) {
-    if (index > cursor) {
-      segments.push({ text: text.slice(cursor, index), isMatch: false });
+    const start = sourceIndices[index];
+    const end = sourceIndices[index + needle.length];
+
+    if (start > cursor) {
+      segments.push({ text: text.slice(cursor, start), isMatch: false });
     }
 
-    segments.push({ text: text.slice(index, index + needle.length), isMatch: true });
-    cursor = index + needle.length;
-    index = haystack.indexOf(needle, cursor);
+    segments.push({ text: text.slice(start, end), isMatch: true });
+    cursor = end;
+    index = haystack.indexOf(needle, index + needle.length);
   }
 
   if (cursor < text.length) {
