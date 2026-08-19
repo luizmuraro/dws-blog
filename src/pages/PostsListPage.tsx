@@ -8,6 +8,7 @@ import {
 import {
   EmptyState,
   ErrorState,
+  FavoritesToggle,
   PostCard,
   PostCardSkeleton,
   SortToggle,
@@ -71,11 +72,8 @@ const PostsListPage = () => {
         authors={authorOptions}
         selectedCategoryIds={selectedCategoryIds}
         selectedAuthorIds={selectedAuthorIds}
-        showFavoritesOnly={showFavoritesOnly}
-        favoritesCount={favoritesCount}
         onCategoryChange={setSelectedCategoryIds}
         onAuthorChange={setSelectedAuthorIds}
-        onFavoritesOnlyChange={setShowFavoritesOnly}
       />
     );
   };
@@ -128,11 +126,27 @@ const PostsListPage = () => {
       <div className={styles.toolbar}>
         <h1 className={styles.heading}>DWS blog</h1>
         {renderFilters()}
-        {isLoading ? (
-          <SortToggleSkeleton />
-        ) : (
-          <SortToggle order={sortOrder} onToggle={toggleSortOrder} />
-        )}
+        <div className={styles.controls}>
+          {isLoading ? (
+            <>
+              <span className={styles.favoritesSkeleton} />
+              <span className={styles.separator} aria-hidden="true" />
+              <SortToggleSkeleton />
+            </>
+          ) : (
+            <>
+              <div className={styles.favorites}>
+                <FavoritesToggle
+                  active={showFavoritesOnly}
+                  count={favoritesCount}
+                  onToggle={() => setShowFavoritesOnly(!showFavoritesOnly)}
+                />
+              </div>
+              <span className={styles.separator} aria-hidden="true" />
+              <SortToggle order={sortOrder} onToggle={toggleSortOrder} />
+            </>
+          )}
+        </div>
       </div>
       {searchTerm && (
         <p className={styles.searchSummary}>

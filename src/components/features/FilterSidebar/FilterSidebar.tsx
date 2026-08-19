@@ -45,7 +45,6 @@ const FilterGroup = ({ label, options, selectedIds, onToggle }: FilterGroupProps
 interface Selection {
   categoryIds: string[];
   authorIds: string[];
-  favoritesOnly: boolean;
 }
 
 interface FilterSidebarProps {
@@ -53,38 +52,25 @@ interface FilterSidebarProps {
   authors: FilterOption[];
   selectedCategoryIds: string[];
   selectedAuthorIds: string[];
-  showFavoritesOnly: boolean;
-  favoritesCount: number;
   onCategoryChange: (selectedIds: string[]) => void;
   onAuthorChange: (selectedIds: string[]) => void;
-  onFavoritesOnlyChange: (showFavoritesOnly: boolean) => void;
 }
-
-const FAVORITES_OPTION_ID = 'favorites';
 
 const FilterSidebar = ({
   categories,
   authors,
   selectedCategoryIds,
   selectedAuthorIds,
-  showFavoritesOnly,
-  favoritesCount,
   onCategoryChange,
   onAuthorChange,
-  onFavoritesOnlyChange,
 }: FilterSidebarProps) => {
-  const applied: Selection = {
-    categoryIds: selectedCategoryIds,
-    authorIds: selectedAuthorIds,
-    favoritesOnly: showFavoritesOnly,
-  };
+  const applied: Selection = { categoryIds: selectedCategoryIds, authorIds: selectedAuthorIds };
   const [draft, setDraft] = useState<Selection>(applied);
   const [lastApplied, setLastApplied] = useState<Selection>(applied);
 
   if (
     lastApplied.categoryIds !== applied.categoryIds ||
-    lastApplied.authorIds !== applied.authorIds ||
-    lastApplied.favoritesOnly !== applied.favoritesOnly
+    lastApplied.authorIds !== applied.authorIds
   ) {
     setLastApplied(applied);
     setDraft(applied);
@@ -96,29 +82,22 @@ const FilterSidebar = ({
   const toggleAuthor = (optionId: string) =>
     setDraft((current) => ({ ...current, authorIds: toggleItem(current.authorIds, optionId) }));
 
-  const toggleFavoritesOnly = () =>
-    setDraft((current) => ({ ...current, favoritesOnly: !current.favoritesOnly }));
-
   const applyFilters = () => {
     onCategoryChange(draft.categoryIds);
     onAuthorChange(draft.authorIds);
-    onFavoritesOnlyChange(draft.favoritesOnly);
   };
 
   const clearFilters = () => {
-    setDraft({ categoryIds: [], authorIds: [], favoritesOnly: false });
+    setDraft({ categoryIds: [], authorIds: [] });
     onCategoryChange([]);
     onAuthorChange([]);
-    onFavoritesOnlyChange(false);
   };
 
   const hasFilters =
     draft.categoryIds.length > 0 ||
     draft.authorIds.length > 0 ||
-    draft.favoritesOnly ||
     applied.categoryIds.length > 0 ||
-    applied.authorIds.length > 0 ||
-    applied.favoritesOnly;
+    applied.authorIds.length > 0;
 
   return (
     <aside className={styles.sidebar} aria-label="Filters">
@@ -135,13 +114,6 @@ const FilterSidebar = ({
           </button>
         )}
       </div>
-
-      <FilterGroup
-        label="Favorites"
-        options={[{ id: FAVORITES_OPTION_ID, name: `Only favorites (${favoritesCount})` }]}
-        selectedIds={draft.favoritesOnly ? [FAVORITES_OPTION_ID] : []}
-        onToggle={toggleFavoritesOnly}
-      />
 
       {categories.length > 0 && (
         <FilterGroup

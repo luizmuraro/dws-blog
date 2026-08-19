@@ -37,6 +37,43 @@
   }
 }
 
+.controls {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-16);
+  align-items: center;
+  margin-inline-start: auto;
+}
+
+/* Below desktop the favorites filter travels with the other filters, in the bar. */
+.favorites,
+.favoritesSkeleton,
+.separator {
+  display: none;
+
+  @include m.from(desktop) {
+    display: block;
+  }
+}
+
+.favoritesSkeleton {
+  @include m.from(desktop) {
+    @include m.skeleton;
+
+    width: 7.5rem;
+    height: 2rem;
+    border-radius: var(--radius-pill);
+  }
+}
+
+.separator {
+  @include m.from(desktop) {
+    width: 1px;
+    height: 1.5rem;
+    background-color: var(--color-neutral-light);
+  }
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr;
