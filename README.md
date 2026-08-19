@@ -5,6 +5,8 @@ sorting, a post detail page, and favorites that survive a reload.
 
 **Live:** https://dws-blog-omega.vercel.app
 
+**Storybook:** https://dws-blog-storybook.vercel.app
+
 ## Screens
 
 ### Mobile
@@ -93,6 +95,9 @@ Assertions go through roles and accessible names rather than CSS module classes,
 `undefined` under Vitest.
 
 ## Storybook
+
+The published catalog lives at https://dws-blog-storybook.vercel.app, redeployed from CI on every
+push to `main`.
 
 `npm run storybook` opens a catalog of 75 stories across 21 files. Global decorators supply a
 per-story Redux store and a memory router, so store-connected components work without per-story
