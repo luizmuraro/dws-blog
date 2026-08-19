@@ -3,6 +3,22 @@
 A blog front end built for the DWS technical test: a post listing with search, filtering and
 sorting, a post detail page, and favorites that survive a reload.
 
+**Live:** https://dws-blog-omega.vercel.app
+
+## Screens
+
+### Mobile
+
+| Listing                                                                                                 | Post detail                                                                                                 | Latest articles                                                                                                  |
+| ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| <img src="docs/screenshots/home-mobile.jpg" alt="Mobile listing with the filter chips above the cards"> | <img src="docs/screenshots/detail-top-mobile.jpg" alt="Mobile post detail with the back button and byline"> | <img src="docs/screenshots/detail-bottom-mobile.jpg" alt="Mobile latest articles section stacked in one column"> |
+
+### Desktop
+
+| Listing                                                                                                      | Post detail                                                                                                     | Latest articles                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| <img src="docs/screenshots/home-desktop.jpg" alt="Post listing with the filter sidebar and a grid of cards"> | <img src="docs/screenshots/detail-top-desktop.jpg" alt="Top of a post, with the title, byline and cover image"> | <img src="docs/screenshots/detail-bottom-desktop.jpg" alt="End of a post, followed by the latest articles section"> |
+
 ## Stack
 
 | Concern           | Choice                                           |
