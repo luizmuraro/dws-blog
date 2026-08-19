@@ -2,14 +2,17 @@ import { Link } from 'react-router-dom';
 import { CloseIcon, HistoryIcon } from '@/components/icons';
 import { CategoryTag } from '@/components/ui';
 import { SearchVariant } from '@/constants/searchVariant';
-import type { UseCategoriesResult } from '@/hooks';
+import type { Category } from '@/types/domain';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { clearRecentSearches, removeRecentSearch, selectRecentSearches } from '@/store/searchSlice';
+import { cx } from '@/utils/classNames';
 import styles from './SearchSuggestions.module.scss';
 
 interface SearchSuggestionsProps {
+  id: string;
   variant: SearchVariant;
-  categories: UseCategoriesResult;
+  categories: Category[];
+  isCategoriesLoading: boolean;
   onSelectTerm: (term: string) => void;
   onSelectCategory: (name: string) => void;
   onClose: () => void;
@@ -18,8 +21,10 @@ interface SearchSuggestionsProps {
 const SKELETON_CHIP_COUNT = 5;
 
 const SearchSuggestions = ({
+  id,
   variant,
-  categories: { categories, isLoading },
+  categories,
+  isCategoriesLoading,
   onSelectTerm,
   onSelectCategory,
   onClose,
@@ -29,12 +34,17 @@ const SearchSuggestions = ({
 
   const isMobile = variant === SearchVariant.Mobile;
   const hasRecent = recentSearches.length > 0;
-  const hasCategories = isLoading || categories.length > 0;
+  const hasCategories = isCategoriesLoading || categories.length > 0;
 
   if (!hasRecent && !hasCategories) return null;
 
   return (
-    <div className={`${styles.panel} ${isMobile ? styles.panelMobile : styles.panelDesktop}`}>
+    <div
+      className={cx(styles.panel, isMobile ? styles.panelMobile : styles.panelDesktop)}
+      id={id}
+      role="dialog"
+      aria-label="Search suggestions"
+    >
       <div className={styles.body}>
         {hasRecent && (
           <section>
@@ -81,7 +91,7 @@ const SearchSuggestions = ({
             </div>
 
             <div className={styles.categories}>
-              {isLoading
+              {isCategoriesLoading
                 ? Array.from({ length: SKELETON_CHIP_COUNT }, (_, index) => (
                     <span className={styles.skeletonChip} key={index} />
                   ))

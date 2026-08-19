@@ -3,6 +3,7 @@ import { ChevronDownIcon, CloseIcon } from '@/components/icons';
 import { useDropdown } from '@/hooks';
 import type { FilterOption } from '@/types/ui';
 import { toggleItem } from '@/utils/array';
+import { cx } from '@/utils/classNames';
 import styles from './FilterDropdown.module.scss';
 
 interface FilterDropdownProps {
@@ -29,14 +30,18 @@ const FilterDropdown = ({ label, options, selectedIds, onChange }: FilterDropdow
   return (
     <div className={styles.dropdown} ref={containerRef}>
       <div
-        className={`${styles.control} ${isOpen ? styles.controlOpen : ''} ${hasSelection ? styles.controlSelected : ''}`}
+        className={cx(
+          styles.control,
+          isOpen && styles.controlOpen,
+          hasSelection && styles.controlSelected,
+        )}
       >
         <button
           className={styles.trigger}
           ref={triggerRef}
           type="button"
           aria-expanded={isOpen}
-          aria-controls={panelId}
+          aria-controls={isOpen ? panelId : undefined}
           onClick={toggle}
         >
           <span className={styles.label}>{hasSelection ? selectedNames.join(', ') : label}</span>
@@ -68,7 +73,7 @@ const FilterDropdown = ({ label, options, selectedIds, onChange }: FilterDropdow
             return (
               <li key={option.id}>
                 <button
-                  className={`${styles.option} ${isSelected ? styles.optionSelected : ''}`}
+                  className={cx(styles.option, isSelected && styles.optionSelected)}
                   type="button"
                   aria-pressed={isSelected}
                   onClick={() => onChange(toggleItem(selectedIds, option.id))}

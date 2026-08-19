@@ -38,7 +38,7 @@ const renderSearch = (options?: Parameters<typeof renderWithProviders>[1]) =>
 
 const currentSearch = () => screen.getByTestId('location');
 
-const desktopInput = () => screen.getAllByRole('searchbox', { name: 'Search posts' })[0];
+const desktopInput = () => screen.getAllByRole('combobox', { name: 'Search posts' })[0];
 
 beforeEach(() => {
   stubApi();
@@ -73,6 +73,24 @@ describe('PostSearch desktop field', () => {
     await user.click(desktopInput());
 
     expect(await screen.findByRole('heading', { name: 'Browse by category' })).toBeInTheDocument();
+  });
+
+  it('reports the collapsed panel to assistive tech', () => {
+    renderSearch();
+
+    expect(desktopInput()).toHaveAttribute('aria-expanded', 'false');
+    expect(desktopInput()).not.toHaveAttribute('aria-controls');
+  });
+
+  it('points at the panel it opened', async () => {
+    const { user } = renderSearch();
+
+    await user.click(desktopInput());
+
+    const panel = await screen.findByRole('dialog', { name: 'Search suggestions' });
+
+    expect(desktopInput()).toHaveAttribute('aria-expanded', 'true');
+    expect(desktopInput()).toHaveAttribute('aria-controls', panel.id);
   });
 
   it('swaps suggestions for results once the query is long enough', async () => {
@@ -180,7 +198,7 @@ describe('PostSearch mobile', () => {
     await user.click(screen.getByRole('button', { name: 'Open search' }));
 
     expect(screen.getByRole('button', { name: 'Close search' })).toBeInTheDocument();
-    expect(screen.getAllByRole('searchbox', { name: 'Search posts' })).toHaveLength(2);
+    expect(screen.getAllByRole('combobox', { name: 'Search posts' })).toHaveLength(2);
   });
 
   it('clears the field without collapsing', async () => {
@@ -197,7 +215,7 @@ describe('PostSearch mobile', () => {
     const { user } = renderSearch({ initialEntries: ['/?q=react'] });
 
     await user.click(screen.getByRole('button', { name: 'Open search' }));
-    await user.clear(screen.getAllByRole('searchbox', { name: 'Search posts' })[1]);
+    await user.clear(screen.getAllByRole('combobox', { name: 'Search posts' })[1]);
     await user.click(screen.getByRole('button', { name: 'Close search' }));
 
     expect(desktopInput()).toHaveValue('react');

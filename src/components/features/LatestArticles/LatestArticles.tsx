@@ -33,6 +33,7 @@ const LatestArticles = ({ currentPostId }: LatestArticlesProps) => {
         </h2>
         {isLoading ? (
           <div className={styles.grid} aria-busy="true">
+            <p className="visually-hidden">Loading the latest articles…</p>
             {Array.from({ length: LATEST_COUNT }, (_, index) => (
               <PostCardSkeleton key={index} />
             ))}

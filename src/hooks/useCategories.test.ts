@@ -15,7 +15,7 @@ describe('useCategories', () => {
     const { result } = renderHook(() => useCategories(false));
 
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(result.current).toEqual({ categories: [], isLoading: false });
+    expect(result.current).toEqual({ categories: [], isLoading: false, error: null });
   });
 
   it('fetches the categories once it becomes enabled', async () => {
@@ -71,12 +71,13 @@ describe('useCategories', () => {
     expect(fetchMock).toHaveBeenCalledOnce();
   });
 
-  it('swallows a failed request and stays empty', async () => {
+  it('surfaces a failed request instead of looking empty', async () => {
     stubFetchError(500);
 
     const { result } = renderHook(() => useCategories(true));
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
     expect(result.current.categories).toEqual([]);
+    expect(result.current.error).toBeInstanceOf(Error);
   });
 });

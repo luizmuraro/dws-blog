@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeftIcon, CloseIcon, SearchIcon } from '@/components/icons';
@@ -16,6 +16,8 @@ const PostSearch = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const [searchParams] = useSearchParams();
+  const desktopPanelId = useId();
+  const mobilePanelId = useId();
   const committedTerm = searchParams.get('q') ?? '';
 
   const [term, setTerm] = useState(committedTerm);
@@ -41,7 +43,13 @@ const PostSearch = () => {
   const wasMobileOpen = useRef(false);
 
   const search = usePostSearch(term);
-  const categories = useCategories(isPanelOpen || isMobileOpen);
+  const {
+    categories,
+    isLoading: isCategoriesLoading,
+    error: categoriesError,
+  } = useCategories(isPanelOpen || isMobileOpen);
+  // A failed category list just hides the chips; the panel still works without them.
+  const suggestedCategories = categoriesError ? [] : categories;
   const resultsPath = `/?${createSearchParams({ q: term.trim() })}`;
 
   if (lastLocationKey !== location.key) {
@@ -123,7 +131,11 @@ const PostSearch = () => {
             ref={desktopInputRef}
             type="search"
             placeholder="Search"
+            role="combobox"
             aria-label="Search posts"
+            aria-haspopup="dialog"
+            aria-expanded={isPanelOpen}
+            aria-controls={isPanelOpen ? desktopPanelId : undefined}
             value={term}
             onChange={updateDesktopTerm}
             onFocus={openPanel}
@@ -139,6 +151,7 @@ const PostSearch = () => {
         {isPanelOpen &&
           (search.hasQuery ? (
             <SearchResults
+              id={desktopPanelId}
               variant={SearchVariant.Desktop}
               search={search}
               resultsPath={resultsPath}
@@ -146,8 +159,10 @@ const PostSearch = () => {
             />
           ) : (
             <SearchSuggestions
+              id={desktopPanelId}
               variant={SearchVariant.Desktop}
-              categories={categories}
+              categories={suggestedCategories}
+              isCategoriesLoading={isCategoriesLoading}
               onSelectTerm={runSearch}
               onSelectCategory={openCategory}
               onClose={closePanel}
@@ -171,7 +186,11 @@ const PostSearch = () => {
               ref={mobileInputRef}
               type="search"
               placeholder="Search"
+              role="combobox"
               aria-label="Search posts"
+              aria-haspopup="dialog"
+              aria-expanded
+              aria-controls={mobilePanelId}
               value={term}
               onChange={updateTerm}
             />
@@ -187,6 +206,7 @@ const PostSearch = () => {
 
           {search.hasQuery ? (
             <SearchResults
+              id={mobilePanelId}
               variant={SearchVariant.Mobile}
               search={search}
               resultsPath={resultsPath}
@@ -194,8 +214,10 @@ const PostSearch = () => {
             />
           ) : (
             <SearchSuggestions
+              id={mobilePanelId}
               variant={SearchVariant.Mobile}
-              categories={categories}
+              categories={suggestedCategories}
+              isCategoriesLoading={isCategoriesLoading}
               onSelectTerm={runSearch}
               onSelectCategory={openCategory}
               onClose={closeMobile}

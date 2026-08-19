@@ -7,9 +7,11 @@ import { addRecentSearch } from '@/store/searchSlice';
 import { formatResultCount } from '@/utils/search';
 import SearchResultItem from './SearchResultItem';
 import SearchResultsSkeleton from './SearchResultsSkeleton';
+import { cx } from '@/utils/classNames';
 import styles from './SearchResults.module.scss';
 
 interface SearchResultsProps {
+  id: string;
   variant: SearchVariant;
   search: UsePostSearchResult;
   resultsPath: string;
@@ -21,7 +23,7 @@ const PREVIEW_LIMIT: Record<SearchVariant, number> = {
   [SearchVariant.Mobile]: 4,
 };
 
-const SearchResults = ({ variant, search, resultsPath, onClose }: SearchResultsProps) => {
+const SearchResults = ({ id, variant, search, resultsPath, onClose }: SearchResultsProps) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { term, results, isLoading, isPending, hasQuery, error, retry } = search;
@@ -44,7 +46,14 @@ const SearchResults = ({ variant, search, resultsPath, onClose }: SearchResultsP
   };
 
   const renderBody = () => {
-    if (isLoading || isPending) return <SearchResultsSkeleton count={previewLimit} />;
+    if (isLoading || isPending) {
+      return (
+        <div aria-busy="true">
+          <p className="visually-hidden">Searching…</p>
+          <SearchResultsSkeleton count={previewLimit} />
+        </div>
+      );
+    }
 
     if (error) {
       return (
@@ -74,7 +83,12 @@ const SearchResults = ({ variant, search, resultsPath, onClose }: SearchResultsP
   };
 
   return (
-    <div className={`${styles.panel} ${isMobile ? styles.panelMobile : styles.panelDesktop}`}>
+    <div
+      className={cx(styles.panel, isMobile ? styles.panelMobile : styles.panelDesktop)}
+      id={id}
+      role="dialog"
+      aria-label="Search results"
+    >
       <div className={styles.header}>
         <h2 className={styles.heading}>Posts</h2>
         {isMobile && hasResults && (
@@ -82,7 +96,7 @@ const SearchResults = ({ variant, search, resultsPath, onClose }: SearchResultsP
         )}
       </div>
 
-      <div className={`${styles.body} ${isMobile && hasMore ? styles.bodyClipped : ''}`}>
+      <div className={cx(styles.body, isMobile && hasMore && styles.bodyClipped)}>
         {renderBody()}
       </div>
 

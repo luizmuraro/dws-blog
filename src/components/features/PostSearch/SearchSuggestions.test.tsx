@@ -1,29 +1,26 @@
 import { describe, expect, it, vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import { SearchVariant } from '@/constants/searchVariant';
-import type { UseCategoriesResult } from '@/hooks';
+import type { Category } from '@/types/domain';
 import { makeCategory } from '@/test/factories';
 import { renderWithProviders } from '@/test/renderWithProviders';
 import SearchSuggestions from './SearchSuggestions';
 
-const loadedCategories: UseCategoriesResult = {
-  categories: [
-    makeCategory({ id: 'category-1', name: 'Design' }),
-    makeCategory({ id: 'category-2', name: 'Frontend' }),
-  ],
-  isLoading: false,
-};
-
-const emptyCategories: UseCategoriesResult = { categories: [], isLoading: false };
+const loadedCategories: Category[] = [
+  makeCategory({ id: 'category-1', name: 'Design' }),
+  makeCategory({ id: 'category-2', name: 'Frontend' }),
+];
 
 interface RenderOptions {
-  categories?: UseCategoriesResult;
+  categories?: Category[];
+  isCategoriesLoading?: boolean;
   recentTerms?: string[];
   variant?: SearchVariant;
 }
 
 const renderSuggestions = ({
   categories = loadedCategories,
+  isCategoriesLoading = false,
   recentTerms = [],
   variant = SearchVariant.Desktop,
 }: RenderOptions = {}) => {
@@ -37,8 +34,10 @@ const renderSuggestions = ({
     onClose,
     ...renderWithProviders(
       <SearchSuggestions
+        id="search-panel"
         variant={variant}
         categories={categories}
+        isCategoriesLoading={isCategoriesLoading}
         onSelectTerm={onSelectTerm}
         onSelectCategory={onSelectCategory}
         onClose={onClose}
@@ -50,13 +49,13 @@ const renderSuggestions = ({
 
 describe('SearchSuggestions visibility', () => {
   it('renders nothing without recent searches and without categories', () => {
-    const { container } = renderSuggestions({ categories: emptyCategories });
+    const { container } = renderSuggestions({ categories: [] });
 
     expect(container).toBeEmptyDOMElement();
   });
 
   it('renders for recent searches alone', () => {
-    renderSuggestions({ categories: emptyCategories, recentTerms: ['react'] });
+    renderSuggestions({ categories: [], recentTerms: ['react'] });
 
     expect(screen.getByRole('heading', { name: 'Recent searches' })).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: 'Browse by category' })).not.toBeInTheDocument();
@@ -70,7 +69,7 @@ describe('SearchSuggestions visibility', () => {
   });
 
   it('renders while the categories are still loading', () => {
-    renderSuggestions({ categories: { categories: [], isLoading: true } });
+    renderSuggestions({ categories: [], isCategoriesLoading: true });
 
     expect(screen.getByRole('heading', { name: 'Browse by category' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Design' })).not.toBeInTheDocument();

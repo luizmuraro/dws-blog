@@ -28,6 +28,7 @@ const meta = {
   title: 'Features/SearchResults',
   component: SearchResults,
   args: {
+    id: 'search-panel',
     variant: SearchVariant.Desktop,
     search: search(),
     resultsPath: '/?q=react',

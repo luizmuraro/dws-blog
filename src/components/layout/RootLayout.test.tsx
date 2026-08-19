@@ -38,7 +38,7 @@ describe('RootLayout', () => {
   it('carries the search field in the header', () => {
     renderLayout();
 
-    expect(screen.getAllByRole('searchbox', { name: 'Search posts' })[0]).toBeInTheDocument();
+    expect(screen.getAllByRole('combobox', { name: 'Search posts' })[0]).toBeInTheDocument();
   });
 
   it('keeps the background decoration out of the accessibility tree', () => {

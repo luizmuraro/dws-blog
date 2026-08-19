@@ -32,7 +32,13 @@ const renderResults = (
   return {
     onClose,
     ...renderWithProviders(
-      <SearchResults variant={variant} search={search} resultsPath="/?q=react" onClose={onClose} />,
+      <SearchResults
+        id="search-panel"
+        variant={variant}
+        search={search}
+        resultsPath="/?q=react"
+        onClose={onClose}
+      />,
     ),
   };
 };

@@ -4,14 +4,11 @@ import { SearchVariant } from '@/constants/searchVariant';
 import { makeCategory } from '@/test/factories';
 import SearchSuggestions from './SearchSuggestions';
 
-const categories = {
-  categories: [
-    makeCategory({ id: 'category-1', name: 'Design' }),
-    makeCategory({ id: 'category-2', name: 'Frontend' }),
-    makeCategory({ id: 'category-3', name: 'Startups' }),
-  ],
-  isLoading: false,
-};
+const categories = [
+  makeCategory({ id: 'category-1', name: 'Design' }),
+  makeCategory({ id: 'category-2', name: 'Frontend' }),
+  makeCategory({ id: 'category-3', name: 'Startups' }),
+];
 
 const withRecent = (recentTerms: string[]) => ({
   preloadedState: { favorites: { ids: [] }, search: { recentTerms } },
@@ -21,8 +18,10 @@ const meta = {
   title: 'Features/SearchSuggestions',
   component: SearchSuggestions,
   args: {
+    id: 'search-panel',
     variant: SearchVariant.Desktop,
     categories,
+    isCategoriesLoading: false,
     onSelectTerm: () => {},
     onSelectCategory: () => {},
     onClose: () => {},
@@ -58,9 +57,9 @@ export const CategoriesOnly: Story = {
 };
 
 export const RecentOnly: Story = {
-  args: { categories: { categories: [], isLoading: false } },
+  args: { categories: [] },
 };
 
 export const LoadingCategories: Story = {
-  args: { categories: { categories: [], isLoading: true } },
+  args: { categories: [], isCategoriesLoading: true },
 };
