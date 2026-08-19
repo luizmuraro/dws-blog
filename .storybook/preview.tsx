@@ -1,0 +1,44 @@
+import type { Decorator, Preview } from '@storybook/react-vite';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import '@fontsource/open-sans/400.css';
+import '@fontsource/open-sans/600.css';
+import '@fontsource/open-sans/700.css';
+import '../src/styles/global.scss';
+import { createAppStore } from '../src/store';
+
+const withStore: Decorator = (Story, context) => (
+  <Provider store={createAppStore(context.parameters.preloadedState)}>
+    <Story />
+  </Provider>
+);
+
+const withRouter: Decorator = (Story, context) => (
+  <MemoryRouter initialEntries={[context.parameters.route ?? '/']}>
+    <Story />
+  </MemoryRouter>
+);
+
+const preview: Preview = {
+  decorators: [withStore, withRouter],
+  parameters: {
+    layout: 'centered',
+    backgrounds: {
+      options: {
+        app: { name: 'App', value: '#060725' },
+        light: { name: 'Light', value: '#f0f0f2' },
+      },
+    },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+  },
+  initialGlobals: {
+    backgrounds: { value: 'app' },
+  },
+};
+
+export default preview;
