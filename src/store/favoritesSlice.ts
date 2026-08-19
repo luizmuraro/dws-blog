@@ -14,18 +14,12 @@ const favoritesSlice = createSlice({
     toggleFavorite: (state, action: PayloadAction<string>) => {
       state.ids = toggleItem(state.ids, action.payload);
     },
-    clearFavorites: (state) => {
-      state.ids = [];
-    },
   },
 });
 
-export const { toggleFavorite, clearFavorites } = favoritesSlice.actions;
+export const { toggleFavorite } = favoritesSlice.actions;
 
 export const selectFavoriteIds = (state: { favorites: FavoritesState }) => state.favorites.ids;
-
-export const selectFavoritesCount = (state: { favorites: FavoritesState }) =>
-  state.favorites.ids.length;
 
 export const selectIsFavorite = (postId: string) => (state: { favorites: FavoritesState }) =>
   state.favorites.ids.includes(postId);

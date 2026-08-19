@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { StorageKey } from '@/utils/storage';
 import { createAppStore } from './index';
-import { clearFavorites, toggleFavorite } from './favoritesSlice';
+import { toggleFavorite } from './favoritesSlice';
 import { addRecentSearch, clearRecentSearches, removeRecentSearch } from './searchSlice';
 
 const seed = (key: StorageKey, values: string[]) => {
@@ -61,11 +61,11 @@ describe('persistence middleware', () => {
     expect(readRaw(StorageKey.Favorites)).toBe(JSON.stringify(['post-1']));
   });
 
-  it('writes the favorites after clearing them', () => {
+  it('writes the favorites after removing the last one', () => {
     seed(StorageKey.Favorites, ['post-1']);
     const store = createAppStore();
 
-    store.dispatch(clearFavorites());
+    store.dispatch(toggleFavorite('post-1'));
 
     expect(readRaw(StorageKey.Favorites)).toBe(JSON.stringify([]));
   });

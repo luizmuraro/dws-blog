@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import reducer, {
-  clearFavorites,
   selectFavoriteIds,
-  selectFavoritesCount,
   selectIsFavorite,
   toggleFavorite,
   type FavoritesState,
@@ -45,10 +43,6 @@ describe('favorites reducer', () => {
     expect(previous.ids).toEqual(['post-1']);
   });
 
-  it('clears every favorite', () => {
-    expect(reducer(stateWith(['post-1', 'post-2']), clearFavorites())).toEqual({ ids: [] });
-  });
-
   it('ignores unknown actions', () => {
     const previous = stateWith(['post-1']);
 
@@ -59,11 +53,6 @@ describe('favorites reducer', () => {
 describe('favorites selectors', () => {
   it('selectFavoriteIds returns the stored ids', () => {
     expect(selectFavoriteIds({ favorites: stateWith(['post-1']) })).toEqual(['post-1']);
-  });
-
-  it('selectFavoritesCount returns how many posts are favorited', () => {
-    expect(selectFavoritesCount({ favorites: stateWith([]) })).toBe(0);
-    expect(selectFavoritesCount({ favorites: stateWith(['post-1', 'post-2']) })).toBe(2);
   });
 
   it('selectIsFavorite answers for the given post', () => {

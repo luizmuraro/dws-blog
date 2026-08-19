@@ -5,11 +5,7 @@ import {
   isAnyOf,
 } from '@reduxjs/toolkit';
 import { StorageKey, readStringArray, writeStringArray } from '@/utils/storage';
-import favoritesReducer, {
-  clearFavorites,
-  selectFavoriteIds,
-  toggleFavorite,
-} from './favoritesSlice';
+import favoritesReducer, { selectFavoriteIds, toggleFavorite } from './favoritesSlice';
 import searchReducer, {
   addRecentSearch,
   clearRecentSearches,
@@ -28,7 +24,7 @@ const createPersistenceMiddleware = () => {
   const middleware = createListenerMiddleware();
 
   middleware.startListening({
-    matcher: isAnyOf(toggleFavorite, clearFavorites),
+    actionCreator: toggleFavorite,
     effect: (_action, listenerApi) => {
       writeStringArray(
         StorageKey.Favorites,
