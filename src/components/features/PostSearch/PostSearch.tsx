@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
-import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeftIcon, CloseIcon, SearchIcon } from '@/components/icons';
 import { SearchVariant } from '@/constants/searchVariant';
 import { useCategories, useDropdown, usePostSearch } from '@/hooks';
@@ -14,11 +14,12 @@ import styles from './PostSearch.module.scss';
 const PostSearch = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const committedTerm = searchParams.get('q') ?? '';
 
   const [term, setTerm] = useState(committedTerm);
-  const [lastCommittedTerm, setLastCommittedTerm] = useState(committedTerm);
+  const [lastLocationKey, setLastLocationKey] = useState(location.key);
 
   const {
     isOpen: isPanelOpen,
@@ -43,14 +44,15 @@ const PostSearch = () => {
   const categories = useCategories(isPanelOpen || isMobileOpen);
   const resultsPath = `/?${createSearchParams({ q: term.trim() })}`;
 
-  if (lastCommittedTerm !== committedTerm) {
-    setLastCommittedTerm(committedTerm);
+  if (lastLocationKey !== location.key) {
+    setLastLocationKey(location.key);
     setTerm(committedTerm);
   }
 
   useEffect(() => {
     if (isMobileOpen) {
       mobileInputRef.current?.focus();
+      mobileInputRef.current?.select();
     } else if (wasMobileOpen.current) {
       mobileTriggerRef.current?.focus();
     }
@@ -72,7 +74,7 @@ const PostSearch = () => {
 
   const collapseMobile = () => {
     closeMobile();
-    setTerm('');
+    setTerm(committedTerm);
   };
 
   const runSearch = (rawTerm: string) => {
