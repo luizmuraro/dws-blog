@@ -48,7 +48,7 @@ describe('useDropdown', () => {
     expect(result.current.toggle).toBe(toggle);
   });
 
-  it('closes on a pointerdown outside the container', () => {
+  it('closes on a click outside the container', () => {
     const container = mountElement<HTMLDivElement>('div');
     const outside = mountElement<HTMLDivElement>('div');
     const { result } = renderHook(() => useDropdown());
@@ -56,12 +56,12 @@ describe('useDropdown', () => {
     result.current.containerRef.current = container;
     act(() => result.current.open());
 
-    fireEvent.pointerDown(outside);
+    fireEvent.click(outside);
 
     expect(result.current.isOpen).toBe(false);
   });
 
-  it('stays open on a pointerdown inside the container', () => {
+  it('stays open on a click inside the container', () => {
     const container = mountElement<HTMLDivElement>('div');
     const inside = document.createElement('button');
     container.append(inside);
@@ -71,20 +71,80 @@ describe('useDropdown', () => {
     result.current.containerRef.current = container;
     act(() => result.current.open());
 
-    fireEvent.pointerDown(inside);
+    fireEvent.click(inside);
 
     expect(result.current.isOpen).toBe(true);
   });
 
-  it('ignores a pointerdown while it is closed', () => {
+  it('ignores a click while it is closed', () => {
     const outside = mountElement<HTMLDivElement>('div');
+    const onOutsideClick = vi.fn();
+
+    outside.addEventListener('click', onOutsideClick);
+    renderHook(() => useDropdown());
+
+    expect(fireEvent.click(outside)).toBe(true);
+    expect(onOutsideClick).toHaveBeenCalled();
+  });
+});
+
+describe('useDropdown dismissing click', () => {
+  it('cancels the click that dismissed it', () => {
+    const container = mountElement<HTMLDivElement>('div');
+    const outside = mountElement<HTMLAnchorElement>('a');
+    const onOutsideClick = vi.fn();
+
+    outside.addEventListener('click', onOutsideClick);
+
     const { result } = renderHook(() => useDropdown());
 
-    fireEvent.pointerDown(outside);
+    result.current.containerRef.current = container;
+    act(() => result.current.open());
 
+    expect(fireEvent.click(outside)).toBe(false);
+    expect(onOutsideClick).not.toHaveBeenCalled();
+  });
+
+  it('lets the click through when it lands in the same dropdown group', () => {
+    const group = mountElement<HTMLDivElement>('div');
+    const container = document.createElement('div');
+    const sibling = document.createElement('button');
+
+    group.setAttribute('data-dropdown-group', '');
+    group.append(container, sibling);
+
+    const onSiblingClick = vi.fn();
+    sibling.addEventListener('click', onSiblingClick);
+
+    const { result } = renderHook(() => useDropdown());
+
+    result.current.containerRef.current = container;
+    act(() => result.current.open());
+
+    expect(fireEvent.click(sibling)).toBe(true);
+    expect(onSiblingClick).toHaveBeenCalled();
     expect(result.current.isOpen).toBe(false);
   });
 
+  it('still cancels clicks outside its own group', () => {
+    const group = mountElement<HTMLDivElement>('div');
+    const container = document.createElement('div');
+    const outside = mountElement<HTMLAnchorElement>('a');
+
+    group.setAttribute('data-dropdown-group', '');
+    group.append(container);
+
+    const { result } = renderHook(() => useDropdown());
+
+    result.current.containerRef.current = container;
+    act(() => result.current.open());
+
+    expect(fireEvent.click(outside)).toBe(false);
+    expect(result.current.isOpen).toBe(false);
+  });
+});
+
+describe('useDropdown keyboard and cleanup', () => {
   it('closes on Escape and returns focus to the trigger', () => {
     const trigger = mountElement<HTMLButtonElement>('button');
     const { result } = renderHook(() => useDropdown());
@@ -116,7 +176,7 @@ describe('useDropdown', () => {
     act(() => result.current.open());
     act(() => result.current.close());
 
-    expect(removeEventListener).toHaveBeenCalledWith('pointerdown', expect.any(Function));
+    expect(removeEventListener).toHaveBeenCalledWith('click', expect.any(Function), true);
     expect(removeEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
   });
 
@@ -127,6 +187,6 @@ describe('useDropdown', () => {
     act(() => result.current.open());
     unmount();
 
-    expect(removeEventListener).toHaveBeenCalledWith('pointerdown', expect.any(Function));
+    expect(removeEventListener).toHaveBeenCalledWith('click', expect.any(Function), true);
   });
 });

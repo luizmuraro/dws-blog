@@ -81,6 +81,16 @@ describe('FilterBar', () => {
     expect(onAuthorChange).toHaveBeenCalledWith(['author-2']);
   });
 
+  it('swaps to the neighbouring dropdown in a single click', async () => {
+    const { user } = renderBar();
+
+    await user.click(screen.getByRole('button', { name: 'Category' }));
+    await user.click(screen.getByRole('button', { name: 'Author' }));
+
+    expect(screen.queryByRole('list', { name: 'Category' })).not.toBeInTheDocument();
+    expect(screen.getByRole('list', { name: 'Author' })).toBeInTheDocument();
+  });
+
   it('shows the current selection on each trigger', () => {
     renderBar({ selectedCategoryIds: ['Design'], selectedAuthorIds: ['author-1'] });
 

@@ -10,7 +10,7 @@ const FilterBar = ({
   onCategoryChange,
   onAuthorChange,
 }: FilterSelection) => (
-  <div className={styles.bar} role="group" aria-label="Filters">
+  <div className={styles.bar} role="group" aria-label="Filters" data-dropdown-group>
     <FilterDropdown
       label="Category"
       options={categories}

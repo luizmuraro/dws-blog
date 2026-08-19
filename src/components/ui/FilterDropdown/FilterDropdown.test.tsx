@@ -115,6 +115,26 @@ describe('FilterDropdown panel', () => {
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
   });
 
+  it('does not let the dismissing click reach the page behind it', async () => {
+    const user = userEvent.setup();
+    const onPostClick = vi.fn();
+
+    render(
+      <>
+        <FilterDropdown label="Category" options={options} selectedIds={[]} onChange={vi.fn()} />
+        <button type="button" onClick={onPostClick}>
+          Post
+        </button>
+      </>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Category' }));
+    await user.click(screen.getByRole('button', { name: 'Post' }));
+
+    expect(screen.queryByRole('list')).not.toBeInTheDocument();
+    expect(onPostClick).not.toHaveBeenCalled();
+  });
+
   it('closes on Escape', async () => {
     const { trigger, user } = renderDropdown();
 
