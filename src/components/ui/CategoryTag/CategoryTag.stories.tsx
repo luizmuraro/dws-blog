@@ -16,3 +16,7 @@ export const Default: Story = {};
 export const LongName: Story = {
   args: { name: 'Software Architecture' },
 };
+
+export const Interactive: Story = {
+  args: { onClick: () => {} },
+};

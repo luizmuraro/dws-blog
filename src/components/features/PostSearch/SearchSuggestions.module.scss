@@ -116,27 +116,6 @@
   padding: var(--space-16);
 }
 
-.category {
-  @include type.caption;
-
-  padding: var(--space-8) var(--space-12);
-  font-weight: 600;
-  color: var(--color-neutral-extra-dark);
-  white-space: nowrap;
-  cursor: pointer;
-  background-color: var(--color-neutral-white);
-  border: 1px solid var(--color-neutral-extra-light);
-  border-radius: var(--radius-pill);
-  transition:
-    color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.category:hover {
-  color: var(--color-secondary-medium);
-  border-color: var(--color-secondary-medium);
-}
-
 .skeletonChip {
   @include m.skeleton;
 

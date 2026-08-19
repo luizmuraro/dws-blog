@@ -1,32 +1,9 @@
-import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { withSearchFieldFrame } from '../../../../.storybook/decorators';
 import { SearchVariant } from '@/constants/searchVariant';
 import type { UsePostSearchResult } from '@/hooks';
 import { makePost } from '@/test/factories';
 import SearchResults from './SearchResults';
-
-const SearchFieldFrame = ({ children }: { children: ReactNode }) => (
-  <div style={{ paddingBottom: '30rem' }}>
-    <div style={{ position: 'relative', width: 'min(33.5rem, 100%)' }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          height: '3.5rem',
-          padding: '0 var(--space-16)',
-          color: 'var(--color-neutral-dark)',
-          backgroundColor: 'var(--color-neutral-white)',
-          border: '1px solid var(--color-neutral-extra-light)',
-          borderRadius: 'var(--radius-pill)',
-          boxShadow: '0 3px 18.1px rgb(91 123 193 / 29%)',
-        }}
-      >
-        Search
-      </div>
-      {children}
-    </div>
-  </div>
-);
 
 const results = Array.from({ length: 5 }, (_, index) =>
   makePost({
@@ -56,7 +33,7 @@ const meta = {
     resultsPath: '/?q=react',
     onClose: () => {},
   },
-  decorators: [(Story) => <SearchFieldFrame>{Story()}</SearchFieldFrame>],
+  decorators: [withSearchFieldFrame('30rem')],
   parameters: {
     layout: 'padded',
     docs: {

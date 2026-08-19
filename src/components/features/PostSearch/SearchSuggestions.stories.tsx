@@ -1,31 +1,8 @@
-import type { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { withSearchFieldFrame } from '../../../../.storybook/decorators';
 import { SearchVariant } from '@/constants/searchVariant';
 import { makeCategory } from '@/test/factories';
 import SearchSuggestions from './SearchSuggestions';
-
-const SearchFieldFrame = ({ children }: { children: ReactNode }) => (
-  <div style={{ paddingBottom: '26rem' }}>
-    <div style={{ position: 'relative', width: 'min(33.5rem, 100%)' }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          height: '3.5rem',
-          padding: '0 var(--space-16)',
-          color: 'var(--color-neutral-dark)',
-          backgroundColor: 'var(--color-neutral-white)',
-          border: '1px solid var(--color-neutral-extra-light)',
-          borderRadius: 'var(--radius-pill)',
-          boxShadow: '0 3px 18.1px rgb(91 123 193 / 29%)',
-        }}
-      >
-        Search
-      </div>
-      {children}
-    </div>
-  </div>
-);
 
 const categories = {
   categories: [
@@ -50,7 +27,7 @@ const meta = {
     onSelectCategory: () => {},
     onClose: () => {},
   },
-  decorators: [(Story) => <SearchFieldFrame>{Story()}</SearchFieldFrame>],
+  decorators: [withSearchFieldFrame('26rem')],
   parameters: {
     layout: 'padded',
     ...withRecent(['react', 'design systems', 'testing']),

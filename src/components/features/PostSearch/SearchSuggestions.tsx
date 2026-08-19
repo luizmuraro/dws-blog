@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { CloseIcon, HistoryIcon } from '@/components/icons';
+import { CategoryTag } from '@/components/ui';
 import { SearchVariant } from '@/constants/searchVariant';
 import type { UseCategoriesResult } from '@/hooks';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -85,14 +86,11 @@ const SearchSuggestions = ({
                     <span className={styles.skeletonChip} key={index} />
                   ))
                 : categories.map((category) => (
-                    <button
-                      className={styles.category}
-                      type="button"
+                    <CategoryTag
                       key={category.id}
+                      name={category.name}
                       onClick={() => onSelectCategory(category.name)}
-                    >
-                      {category.name}
-                    </button>
+                    />
                   ))}
             </div>
           </section>
